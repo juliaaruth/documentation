@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NICU Feeding Evaluation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Warm minimal palette */
+    --bg:#FAF8F4;
+    --bg-elevated:#FFFDF8;
+    --ink:#2A2724;
+    --text:#3A332E;
+    --muted:#6B5F54;
+    --muted-2:#9B8E81;
+    --line:#D5CBBC;
+    --line-soft:#E8DECC;
+    --accent:#9C5F3A;
+    --accent-hover:#874D2D;
+    --accent-soft:rgba(156,95,58,0.10);
+    --tag-bg:#EDE5D5;
+    --tag-hover:#E0D5C0;
+    --shadow-sm:0 1px 2px rgba(40,30,20,0.04);
+    --shadow-md:0 2px 4px rgba(40,30,20,0.04), 0 4px 14px rgba(40,30,20,0.05);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    background:var(--bg);color:var(--text);margin:0;padding:0;
+    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    font-feature-settings:"cv11";
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+
+  /* Header */
+  header{
+    padding:56px 0 28px;
+    display:flex;justify-content:space-between;align-items:baseline;
+    gap:24px;flex-wrap:wrap;
+  }
+  header h1{
+    margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em;color:var(--ink);
+  }
+  header .sub{color:var(--muted);font-size:13px;margin-top:6px;}
+  header .actions{display:flex;gap:10px;}
+
+  /* Buttons */
+  button{
+    font:inherit;font-size:13px;padding:7px 14px;
+    border:1px solid var(--line);background:var(--bg-elevated);cursor:pointer;
+    border-radius:6px;color:var(--ink);font-weight:500;
+    transition:all .15s ease;
+  }
+  button:hover{background:var(--line-soft);border-color:var(--muted-2);}
+  button.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  button.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
+  .link-btn{
+    background:transparent;border:none;color:var(--muted);font-size:12px;
+    padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-weight:400;
+  }
+  .link-btn:hover{color:var(--accent);}
+
+  /* TOC */
+  .toc{
+    position:sticky;top:0;background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:14px 32px;z-index:20;
+    display:flex;gap:4px;overflow-x:auto;scrollbar-width:thin;
+    margin:0 -32px;
+  }
+  .toc a{
+    flex-shrink:0;font-size:13px;color:var(--muted);text-decoration:none;
+    padding:6px 12px;border-radius:6px;
+    display:flex;align-items:center;gap:6px;
+    transition:all .15s;white-space:nowrap;font-weight:500;
+  }
+  .toc a::before{
+    content:'';width:6px;height:6px;border-radius:50%;
+    border:1.5px solid var(--muted-2);background:transparent;
+    transition:all .2s;flex-shrink:0;
+  }
+  .toc a.completed::before{background:var(--accent);border-color:var(--accent);}
+  .toc a:hover{background:var(--line-soft);color:var(--ink);}
+  .toc a.active{background:var(--accent-soft);color:var(--accent);}
+
+  /* Main grid — form left, sticky output right */
+  .main-grid{
+    display:grid;grid-template-columns:minmax(0,1fr) 380px;
+    gap:40px;padding-top:8px;
+  }
+  .form-column{min-width:0;}
+  .preview-column{
+    position:sticky;top:64px;align-self:start;
+    max-height:calc(100vh - 88px);display:flex;flex-direction:column;
+  }
+  @media (max-width:980px){
+    .main-grid{grid-template-columns:1fr;gap:32px;}
+    .preview-column{position:static;max-height:none;}
+  }
+
+  /* Sections */
+  .section-block{
+    padding:28px 0 4px;
+    scroll-margin-top:72px;
+  }
+  .section-block:first-child{padding-top:20px;}
+  .section-block h2{
+    margin:0;font-size:18px;font-weight:600;color:var(--ink);
+    letter-spacing:-0.01em;
+  }
+  .section-header{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:12px;margin:0 0 14px;
+  }
+  .section-menu{position:relative;}
+  .section-menu-btn{
+    background:transparent;border:none;color:var(--muted);
+    font-size:20px;line-height:1;padding:2px 8px;border-radius:5px;
+    cursor:pointer;transition:background .15s,color .15s;
+    letter-spacing:1px;
+  }
+  .section-menu-btn:hover{background:var(--line-soft);color:var(--ink);}
+  .section-menu-btn.open{background:var(--line-soft);color:var(--ink);}
+  .section-menu-list{
+    position:absolute;right:0;top:calc(100% + 4px);z-index:40;
+    background:var(--bg-elevated);border:1px solid var(--line);
+    border-radius:6px;box-shadow:var(--shadow-md);
+    min-width:240px;padding:4px;display:none;
+  }
+  .section-menu-list.open{display:block;}
+  .section-menu-list button{
+    display:block;width:100%;text-align:left;
+    background:transparent;border:none;padding:8px 12px;
+    font-size:13px;color:var(--text);cursor:pointer;border-radius:4px;font-weight:400;
+  }
+  .section-menu-list button:hover{background:var(--line-soft);color:var(--ink);}
+
+  /* Field labels */
+  .field-label{
+    font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0;
+    font-weight:500;margin-bottom:6px;display:block;
+  }
+
+  /* Inputs */
+  input[type="text"],input[type="number"],select,textarea{
+    font:inherit;font-size:14px;padding:9px 12px;
+    border:1px solid var(--line);border-radius:6px;
+    background:var(--bg-elevated);color:var(--text);width:100%;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  textarea{min-height:80px;line-height:1.55;resize:vertical;}
+
+  /* Background Info & Logistics grid */
+  .grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
+  .grid-6 label,.grid-6 .field{
+    display:flex;flex-direction:column;font-size:12px;color:var(--muted);
+    text-transform:none;letter-spacing:0;font-weight:500;gap:6px;
+  }
+  .grid-6 .span2{grid-column:span 2;}
+  .grid-6 .span3{grid-column:span 3;}
+  .grid-6 .span6{grid-column:span 6;}
+  .inline-cbs{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:2px;}
+  .inline-cbs label{
+    display:flex;align-items:center;gap:7px;font-size:14px;color:var(--text);
+    font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;flex-direction:row;
+  }
+  .inline-cbs input[type="checkbox"]{margin:0;accent-color:var(--accent);}
+
+  /* CB + comment row */
+  .cb-comment-row{
+    display:grid;grid-template-columns:minmax(160px,30%) 1fr;
+    gap:18px;margin-bottom:12px;align-items:start;
+  }
+  .cb-group{display:flex;flex-direction:column;gap:9px;margin-top:0;}
+  .cb-group [data-role="cb-list"]{display:flex;flex-direction:column;gap:7px;}
+  .cb-group label{
+    display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--text);position:relative;
+  }
+  .cb-group input[type="checkbox"]{margin:0;flex-shrink:0;accent-color:var(--accent);}
+  .cb-del{
+    margin-left:auto;color:transparent;font-size:14px;line-height:1;
+    padding:0 4px;border-radius:3px;cursor:pointer;transition:color .15s,background .15s;
+  }
+  .cb-group label:hover .cb-del{color:var(--muted-2);}
+  .cb-del:hover{color:var(--ink) !important;background:var(--tag-hover);}
+  .cb-add{
+    display:flex;align-items:center;gap:6px;margin-top:2px;flex-wrap:wrap;
+  }
+  .cb-add input{
+    flex:1;min-width:100px;font:inherit;font-size:12px;padding:5px 9px;
+    border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--text);
+  }
+  .cb-add input:focus{outline:none;border-color:var(--accent);}
+  .cb-add button{padding:5px 10px;font-size:11px;}
+  .cb-add .link-btn{padding:0;font-size:11px;}
+  .comment-col{display:flex;flex-direction:column;}
+  .comment-col textarea{min-height:100px;}
+
+  /* Multi-comment */
+  .multi-comment-block{margin-bottom:24px;}
+
+  /* Tag system */
+  .tag-section{margin-top:16px;}
+  .tag-section-header{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+  }
+  .tag-section-header .field-label{margin-bottom:0;}
+  .tag-list{
+    display:flex;flex-wrap:wrap;gap:4px 6px;margin-bottom:12px;min-height:26px;
+  }
+  .tag-list .empty-hint{color:var(--muted-2);font-size:12px;font-style:italic;}
+  .tag{
+    display:inline-flex;align-items:center;gap:1px;
+    background:transparent;border:none;padding:0;
+    font-size:13px;color:var(--text);cursor:pointer;
+    transition:color .15s;user-select:none;
+  }
+  .tag .tag-text{
+    padding:4px 10px;border-radius:6px;
+    background:var(--tag-bg);
+    transition:background .15s,color .15s,transform .1s;
+  }
+  .tag:hover .tag-text{background:var(--tag-hover);}
+  .tag:active .tag-text{transform:scale(.97);}
+  .tag.flash .tag-text{
+    background:var(--accent);color:#fff;animation:tagFlash .6s ease;
+  }
+  @keyframes tagFlash{
+    0%{background:var(--accent);color:#fff;}
+    100%{background:var(--tag-bg);color:var(--text);}
+  }
+  .tag-delete{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:18px;height:18px;color:transparent;font-size:14px;line-height:1;
+    cursor:pointer;transition:color .15s,background .15s;border-radius:4px;margin-left:1px;
+  }
+  .tag:hover .tag-delete{color:var(--muted);}
+  .tag-delete:hover{color:var(--ink) !important;background:var(--tag-hover);}
+
+  /* Drag handle (⋮⋮) — visible on tag hover, left side */
+  .tag-drag-handle{
+    color:transparent;cursor:grab;padding:0 1px 0 3px;font-size:12px;
+    line-height:1;user-select:none;letter-spacing:-2px;
+    transition:color .15s;
+  }
+  .tag:hover .tag-drag-handle{color:var(--muted-2);}
+  .tag-drag-handle:active{cursor:grabbing;}
+
+  /* Drag & drop visual states */
+  .tag.dragging{opacity:0.35;}
+  .tag.drop-before{box-shadow:-2px 0 0 0 var(--accent);}
+  .tag.drop-after{box-shadow:2px 0 0 0 var(--accent);}
+
+  /* Smart tag: shows a bold accent-color * after the parent label */
+  .tag.tag-smart .tag-text::after{
+    content:"*";font-size:16px;color:var(--accent);font-weight:700;
+    margin-left:4px;line-height:0;position:relative;top:3px;
+  }
+  /* Alias tag: displays short label, pastes long text; marked with a → */
+  .tag.tag-alias .tag-text::after{
+    content:". . .";font-size:11px;color:var(--accent);font-weight:700;
+    margin-left:2px;vertical-align:middle;letter-spacing:-1px;
+  }
+
+  /* Smart-tag popup: floating panel with mini-tag chips + Insert button */
+  .smart-popup{
+    position:fixed;z-index:80;
+    background:var(--bg-elevated);border:1px solid var(--line);
+    border-radius:8px;box-shadow:var(--shadow-md);
+    padding:10px 12px;min-width:220px;max-width:360px;
+    animation:toast-in .15s ease;
+  }
+  .smart-popup-header{
+    font-size:11px;color:var(--muted);font-weight:500;
+    margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px;
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+  }
+  .smart-popup-parent{color:var(--text);text-transform:none;font-weight:600;font-size:12.5px;letter-spacing:0;flex:1;}
+  .smart-popup-close{
+    background:transparent;border:none;color:var(--muted);font-size:16px;
+    line-height:1;padding:0 4px;cursor:pointer;border-radius:3px;
+  }
+  .smart-popup-close:hover{color:var(--ink);background:var(--tag-hover);}
+  .smart-popup-mini{
+    display:flex;flex-wrap:wrap;gap:4px 5px;margin-bottom:10px;
+  }
+  .smart-mini{
+    background:var(--tag-bg);border:1px solid transparent;
+    padding:4px 10px;border-radius:6px;font-size:13px;color:var(--text);
+    cursor:pointer;transition:background .15s,border-color .15s,color .15s;
+  }
+  .smart-mini:hover{background:var(--tag-hover);}
+  .smart-mini.selected{
+    background:var(--accent);color:#fff;border-color:var(--accent);
+  }
+  .smart-popup-actions{
+    display:flex;justify-content:flex-end;gap:6px;
+    border-top:1px solid var(--line-soft);padding-top:8px;
+  }
+  .smart-popup-actions button{padding:5px 12px;font-size:12px;}
+
+  /* Toast notification (bottom-right, for undo delete) */
+  .toast{
+    position:fixed;bottom:24px;right:24px;
+    background:var(--ink);color:#fff;
+    padding:10px 14px;border-radius:6px;font-size:13px;
+    display:flex;align-items:center;gap:14px;
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
+    z-index:100;max-width:400px;
+    animation:toast-in .2s ease;
+  }
+  .toast .toast-msg{color:rgba(255,255,255,.85);}
+  .toast .toast-action{
+    color:#fff;background:transparent;border:none;padding:0;
+    text-decoration:underline;cursor:pointer;font-size:13px;font-weight:600;
+  }
+  @keyframes toast-in{
+    from{opacity:0;transform:translateY(8px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  .tag-input{display:flex;gap:8px;align-items:center;}
+  .tag-input input{
+    flex:1;font:inherit;font-size:13px;padding:7px 11px;
+    border:1px solid var(--line);border-radius:6px;
+    background:var(--bg-elevated);color:var(--text);
+  }
+  .tag-input button{padding:7px 14px;font-size:12px;}
+
+  /* Output section — styled as a sticky panel */
+  .output-section{
+    background:var(--bg-elevated);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px;
+    box-shadow:var(--shadow-sm);
+    display:flex;flex-direction:column;
+    max-height:calc(100vh - 88px);
+    scroll-margin-top:72px;
+  }
+  .output-section h2{margin:0;font-size:15px;font-weight:600;color:var(--ink);}
+  .output-section .live-indicator{
+    font-size:10.5px;color:var(--accent);background:var(--accent-soft);
+    padding:2px 8px;border-radius:10px;font-style:normal;font-weight:600;
+    margin-left:8px;letter-spacing:.2px;text-transform:uppercase;
+  }
+  .output-header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:14px;gap:12px;flex-wrap:wrap;
+  }
+  .output-tools{display:flex;gap:6px;}
+  .output-tools button{padding:5px 11px;font-size:12px;}
+  .output-section pre{
+    white-space:pre-wrap;background:var(--bg);
+    border:1px solid var(--line-soft);
+    padding:14px;border-radius:6px;
+    font-family:"JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace;
+    font-size:11.5px;color:var(--text);margin:0;
+    flex:1;overflow-y:auto;line-height:1.65;
+  }
+
+  /* Footer */
+  .footer{
+    padding:40px 0 56px;font-size:12px;color:var(--muted);line-height:1.6;
+    margin-top:48px;border-top:1px solid var(--line);
+  }
+  .footer p{margin:0;padding-top:24px;}
+  .footer b{color:var(--text);font-weight:500;}
+
+  @media print{
+    body{padding:0;background:white;}
+    .toc,header .actions,.tag-input,.tag-section-header button{display:none !important;}
+    .section-block{page-break-inside:avoid;}
+    .main-grid{grid-template-columns:1fr;gap:24px;}
+    .preview-column{position:static;max-height:none;}
+    .output-section{box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>NICU Feeding Evaluation</h1>
+    </div>
+    <div class="actions">
+      <button onclick="exportCustomizations()" title="Download tags & checkbox options as JSON">Export</button>
+      <button onclick="importCustomizations()" title="Import tags & checkbox options from a JSON file">Import</button>
+      <button onclick="clearForm()">Clear All</button>
+    </div>
+  </header>
+
+  <!-- Sticky TOC -->
+  <nav class="toc" id="toc"></nav>
+
+  <!-- Two-column layout: form on left, sticky output on right -->
+  <div class="main-grid">
+    <div class="form-column">
+      <div id="sections-container"></div>
+    </div>
+
+    <aside class="preview-column">
+      <section class="output-section" id="sec_output">
+        <div class="output-header">
+          <h2>Generated Note <span class="live-indicator">live</span></h2>
+          <div class="output-tools">
+            <button onclick="copyOutput()">Copy</button>
+            <button class="primary" onclick="window.print()">Print</button>
+          </div>
+        </div>
+        <pre id="output">Fill in the form — the note will appear here as you type.</pre>
+      </section>
+    </aside>
+  </div>
+
+  <div class="footer">
+    <p><b>Tag persistence:</b> Tags are saved per-section to your browser's localStorage and survive refresh. Each section has its own "Reset to defaults" link. Tags persist across browser sessions but are scoped per browser, per file path, and are not synced.</p>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// SECTION DEFINITIONS — shared with the wizard variant
+// ============================================================================
+const SECTIONS = [
+  { id:"background", type:"background", title:"Background Info", short:"Background" },
+
+  {
+    id:"readiness", type:"cb-comment-tags", title:"Readiness", short:"Readiness",
+    checkboxes:["Physiologic stability","Postural tone","Rooting sequence","State"],
+    commentId:"readinessComment", commentLabel:"Readiness Comment",
+    defaultTags:[
+      "Tachypnea at rest","Tachypnea with handling",
+      "O2 desaturations at rest","O2 desaturations with handling",
+      "Latent rooting response","Stimulable rooting response","Absent rooting response",
+      "Low tone","Mixed tone",
+      "Dozy state","Light sleep state","Fussy state"
+    ]
+  },
+
+  {
+    id:"oralmotor", type:"cb-comment-tags", title:"Oral-motor", short:"Oral-motor",
+    checkboxes:["Decreased root+latch","Ankyloglossia"],
+    commentId:"oralMotorComment", commentLabel:"Oral-motor Comment",
+    defaultTags:[
+      "Inefficient suction","Strong suction throughout",
+      "Compression-only sucking burst","Coordinated suck pattern","Disorganized suck pattern",
+      "Excessive milk loss","Trace milk loss",
+      "Tongue retraction","Anterior tongue",
+      "Jaw instability","Jaw clenching"
+    ]
+  },
+
+  {
+    id:"ssb", type:"cb-comment-tags", title:"S/S/B — Suck/Swallow/Breathe", short:"S/S/B",
+    checkboxes:["Obligatory","Alternating","Intermittent","Coordinated","Integrated","Dysfunctional"],
+    commentId:"ssbComment", commentLabel:"S/S/B Comment",
+    defaultTags:[
+      "Long sucking bursts maintained","Short sucking bursts only",
+      "Breath holding during burst","Integrated breaths within burst",
+      "External pacing required","Self-paced effectively",
+      "Dysrhythmic SSB pattern","Smooth nipple-to-suck transition",
+      "Gulping/effortful swallows","Yelping at swallow-to-breath transition",
+      "Coughing/choking observed"
+    ]
+  },
+
+  {
+    id:"physio", type:"cb-comment-tags", title:"Physiologic Stability", short:"Physio",
+    checkboxes:["Abrupt decline","Fluctuating stability","Within normal range"],
+    commentId:"physiologicStabilityComment", commentLabel:"Physiologic Stability Comment",
+    defaultTags:[
+      "Single desaturation event","Multiple desaturation events",
+      "Single bradycardia event","Multiple bradycardia events",
+      "Color change around mouth","Color change around eyes",
+      "Mild distress cues only","Compelling distress cues",
+      "VS stable throughout","Recovered with brief rest"
+    ]
+  },
+
+  {
+    id:"engagement", type:"cb-comment-tags", title:"Feeding Engagement", short:"Engagement",
+    checkboxes:["Awake","Dozy","Deep sleep","Fussy","Hyper-alert","Light sleep","Quiet alert","State shutdown"],
+    commentId:"feedingEngagementComment", commentLabel:"Feeding Engagement Comment",
+    defaultTags:[
+      "Awake throughout feed","Drowsy after 5 minutes","Drowsy within 5 minutes",
+      "Sustained motor tone","Late loss of tone","Early loss of tone",
+      "Active feeding engagement","Cued readiness behaviors"
+    ]
+  },
+
+  {
+    id:"tolerance-strategies", type:"multi-comment", title:"Feeding Tolerance & Strategies", short:"Tolerance",
+    blocks:[
+      {
+        commentId:"feedingToleranceComment", commentLabel:"Feeding Tolerance Comment",
+        defaultTags:[
+          "Tolerated feed well","Required brief rest breaks","Required intervention",
+          "Energy maintained throughout","Energy depletion noted","Fluctuating tolerance",
+          "VS stable throughout feed"
+        ]
+      },
+      {
+        commentId:"feedingStrategiesComment", commentLabel:"Feeding Strategies Comment",
+        defaultTags:[
+          "Co-regulated pacing","External pacing every 3-4 sucks",
+          "Side-lying position","Elevated side-lying",
+          "Slow flow nipple","Standard flow nipple",
+          "Containment provided","Sensory modifications",
+          "Frequent rest breaks","Chin/cheek support"
+        ]
+      }
+    ]
+  },
+
+  {
+    id:"stateSensory", type:"cb-comment-tags", title:"State/Sensory", short:"State/Sensory",
+    checkboxes:["Abrupt change","Hypersensitive","Hyposensitive","Smooth transition"],
+    commentId:"stateSensoryComment", commentLabel:"State/Sensory Comment",
+    defaultTags:[
+      "Smooth state transitions","Abrupt state changes",
+      "Hypersensitive to touch","Hyposensitive to stimuli",
+      "Required reduced stimulation","Tolerated environmental stimuli",
+      "Sensory-seeking behaviors","Calm to alert transition"
+    ]
+  },
+
+  {
+    id:"postFeed", type:"cb-comment-tags", title:"Post Feed Presentation", short:"Post Feed",
+    checkboxes:["Physiologic change","State change","State/physiologic stable"],
+    commentId:"postFeedComment", commentLabel:"Post Feed Comment",
+    defaultTags:[
+      "Quiet alert post-feed","Drowsy post-feed","Restless post-feed",
+      "Flexed posture maintained","Decreased tone post-feed","Energy depleted",
+      "Stable VS post-feed","Required suctioning"
+    ]
+  },
+
+  {
+    id:"clinical-context", type:"multi-comment", title:"Clinical Context", short:"Context",
+    blocks:[
+      {
+        commentId:"compoundingRisk", commentLabel:"Compounding Risk",
+        defaultTags:[
+          "Prematurity","IVH grade I-II","BPD","GERD/reflux","Cardiac defect",
+          "Genetic syndrome","Neurological concerns","Respiratory support"
+        ]
+      },
+      {
+        commentId:"historyRelatedToSLP", commentLabel:"History Related to SLP",
+        defaultTags:[
+          "Prior MBSS","Prior FEES","Prior swallow study",
+          "Caffeine therapy","Prior feeding therapy","TPN history","NG feeds previously"
+        ]
+      },
+      {
+        commentId:"impressions", commentLabel:"Impressions",
+        defaultTags:[
+          "Skills emerging","Skills not yet evident","Skills consistent with age",
+          "Skills below expected for age","Skills advancing appropriately","Plateau in skill development"
+        ]
+      }
+    ]
+  },
+
+  {
+    id:"recommendations", type:"cb-comment-tags", title:"Recommendations", short:"Recommendations",
+    checkboxes:["Cue based with max","Cue based feeding","Cue based feeding + DBF","DBF only","Instrumental evaluation","No DBF","Pre-feed only","PO with SLP only"],
+    commentId:"recommendationsComment", commentLabel:"Recommendations Comment",
+    defaultTags:[
+      "Continue cue-based feeding","Advance volume gradually",
+      "Reassess in 24 hours","Reassess in 48 hours",
+      "Consult lactation","Consider MBSS",
+      "Continue current strategies","Discharge teaching"
+    ]
+  },
+
+  { id:"logistics", type:"logistics", title:"Feeding Logistics", short:"Logistics" }
+];
+
+const TAG_PREFIX = "nicuTags_onepage_";
+const CHECKBOX_PREFIX = "nicuChecks_onepage_";
+
+// ============================================================================
+// Customizable checkbox groups — parallel to the tag system, per-section state
+// ============================================================================
+const CHECKBOX_STATE = {};
+
+function defaultCheckboxesFor(sectionId){
+  const sec = SECTIONS.find(s => s.id === sectionId);
+  return sec && Array.isArray(sec.checkboxes) ? [...sec.checkboxes] : [];
+}
+function loadCheckboxesFor(sectionId){
+  try {
+    const stored = localStorage.getItem(CHECKBOX_PREFIX + sectionId);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return Array.isArray(parsed) ? parsed : defaultCheckboxesFor(sectionId);
+    }
+  } catch (e) { console.warn("loadCheckboxes", sectionId, e); }
+  return defaultCheckboxesFor(sectionId);
+}
+function saveCheckboxesFor(sectionId){
+  try { localStorage.setItem(CHECKBOX_PREFIX + sectionId, JSON.stringify(CHECKBOX_STATE[sectionId] || [])); }
+  catch (e) { console.warn("saveCheckboxes", sectionId, e); }
+}
+function mountCheckboxGroup(groupEl){
+  const sectionId = groupEl.dataset.sectionId;
+  if (!sectionId) return;
+  const input   = groupEl.querySelector('[data-role="cb-input"]');
+  const addBtn  = groupEl.querySelector('[data-action="add-cb"]');
+  const resetBtn = groupEl.querySelector('[data-action="reset-cb"]');
+  const list    = groupEl.querySelector('[data-role="cb-list"]');
+  if (addBtn) addBtn.addEventListener("click", () => addCheckbox(groupEl));
+  if (resetBtn) resetBtn.addEventListener("click", () => resetCheckboxes(groupEl));
+  if (input) input.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); addCheckbox(groupEl); }
+  });
+  // Delegate delete clicks on the × next to each checkbox label
+  if (list) list.addEventListener("click", e => {
+    const del = e.target.closest('[data-action="del-cb"]');
+    if (!del) return;
+    e.preventDefault();
+    e.stopPropagation();
+    deleteCheckbox(groupEl, del.dataset.value);
+  });
+}
+function rerenderCheckboxList(groupEl){
+  const sectionId = groupEl.dataset.sectionId;
+  const list = groupEl.querySelector('[data-role="cb-list"]');
+  if (!list) return;
+  // Preserve which options were currently checked before the rerender
+  const currentlyChecked = new Set(
+    [...list.querySelectorAll('input[type="checkbox"]:checked')].map(c => c.value)
+  );
+  list.innerHTML = renderCheckboxListHtml(sectionId);
+  // Restore checked state on options that still exist
+  list.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    if (currentlyChecked.has(cb.value)) cb.checked = true;
+  });
+}
+function addCheckbox(groupEl){
+  const sectionId = groupEl.dataset.sectionId;
+  const input = groupEl.querySelector('[data-role="cb-input"]');
+  const value = input.value.trim();
+  if (!value) return;
+  const boxes = CHECKBOX_STATE[sectionId] || (CHECKBOX_STATE[sectionId] = []);
+  if (boxes.some(b => b.toLowerCase() === value.toLowerCase())) {
+    alert("That option already exists in this section.");
+    input.select();
+    return;
+  }
+  boxes.push(value);
+  saveCheckboxesFor(sectionId);
+  rerenderCheckboxList(groupEl);
+  input.value = "";
+  input.focus();
+  scheduleRegen();
+  updateCompletionDots();
+}
+function deleteCheckbox(groupEl, value){
+  const sectionId = groupEl.dataset.sectionId;
+  const boxes = CHECKBOX_STATE[sectionId] || [];
+  const idx = boxes.indexOf(value);
+  if (idx < 0) return;
+  boxes.splice(idx, 1);
+  saveCheckboxesFor(sectionId);
+  rerenderCheckboxList(groupEl);
+  scheduleRegen();
+  updateCompletionDots();
+}
+function resetCheckboxes(groupEl){
+  const sectionId = groupEl.dataset.sectionId;
+  if (!confirm("Reset this section's options to the defaults? Any custom options here will be lost.")) return;
+  CHECKBOX_STATE[sectionId] = defaultCheckboxesFor(sectionId);
+  saveCheckboxesFor(sectionId);
+  rerenderCheckboxList(groupEl);
+  scheduleRegen();
+  updateCompletionDots();
+}
+
+// ============================================================================
+// Render — every section visible, no card toggling
+// ============================================================================
+function renderAll(){
+  renderTOC();
+  const root = document.getElementById("sections-container");
+  let html = "";
+  SECTIONS.forEach(sec => {
+    html += `<section class="section-block" id="sec_${sec.id}">`;
+    html += `<div class="section-header">
+      <h2>${escapeHtml(sec.title)}</h2>
+      ${renderSectionMenu(sec)}
+    </div>`;
+    if (sec.type === "background")           html += renderBackground();
+    else if (sec.type === "cb-comment-tags") html += renderCbCommentTags(sec);
+    else if (sec.type === "multi-comment")   html += renderMultiComment(sec);
+    else if (sec.type === "logistics")       html += renderLogistics();
+    html += `</section>`;
+  });
+  root.innerHTML = html;
+  document.querySelectorAll('.tag-section[data-comment-id]').forEach(mountTagBar);
+  document.querySelectorAll('.cb-group[data-section-id]').forEach(mountCheckboxGroup);
+  document.querySelectorAll('.section-menu-btn').forEach(btn => {
+    btn.addEventListener("click", e => { e.stopPropagation(); toggleSectionMenu(btn); });
+  });
+  document.querySelectorAll('.section-menu-list button[data-action]').forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      handleSectionMenuAction(btn.dataset.action, btn.dataset.target);
+      closeAllSectionMenus();
+    });
+  });
+}
+
+// Build the ⋯ menu for a section. Returns empty string for sections with no
+// resettable content (Background, Logistics, Output).
+function renderSectionMenu(sec){
+  const items = [];
+  if (sec.type === "cb-comment-tags") {
+    items.push({label:"Reset checkbox options to defaults", action:"reset-cb", target:sec.id});
+    items.push({label:"Reset tags to defaults", action:"reset-tags", target:sec.commentId});
+  } else if (sec.type === "multi-comment") {
+    if (sec.blocks.length === 1) {
+      items.push({label:"Reset tags to defaults", action:"reset-tags", target:sec.blocks[0].commentId});
+    } else {
+      sec.blocks.forEach(block => {
+        items.push({label:`Reset "${block.commentLabel}" tags`, action:"reset-tags", target:block.commentId});
+      });
+    }
+  }
+  if (!items.length) return "";
+  const menuItems = items.map(item =>
+    `<button data-action="${item.action}" data-target="${escapeAttr(item.target)}">${escapeHtml(item.label)}</button>`
+  ).join("");
+  return `
+    <div class="section-menu">
+      <button class="section-menu-btn" title="Section options" aria-label="Section options">⋯</button>
+      <div class="section-menu-list">${menuItems}</div>
+    </div>
+  `;
+}
+
+function toggleSectionMenu(btn){
+  const menu = btn.nextElementSibling;
+  if (!menu) return;
+  const wasOpen = menu.classList.contains("open");
+  closeAllSectionMenus();
+  if (!wasOpen) {
+    menu.classList.add("open");
+    btn.classList.add("open");
+  }
+}
+
+function closeAllSectionMenus(){
+  document.querySelectorAll('.section-menu-list.open').forEach(m => m.classList.remove("open"));
+  document.querySelectorAll('.section-menu-btn.open').forEach(b => b.classList.remove("open"));
+}
+
+// Global click-outside handler to close open section menus
+document.addEventListener("click", e => {
+  if (!e.target.closest(".section-menu")) closeAllSectionMenus();
+});
+
+function handleSectionMenuAction(action, target){
+  if (action === "reset-cb") {
+    const groupEl = document.querySelector(`.cb-group[data-section-id="${target}"]`);
+    if (groupEl) resetCheckboxes(groupEl);
+  } else if (action === "reset-tags") {
+    const barEl = document.querySelector(`.tag-section[data-comment-id="${target}"]`);
+    if (barEl) resetTags(barEl);
+  }
+}
+
+function renderTOC(){
+  const toc = document.getElementById("toc");
+  let html = "";
+  SECTIONS.forEach(sec => {
+    html += `<a href="#sec_${sec.id}" data-target="sec_${sec.id}">${escapeHtml(sec.short || sec.title)}</a>`;
+  });
+  html += `<a href="#sec_output" data-target="sec_output">Note ↓</a>`;
+  toc.innerHTML = html;
+}
+
+function renderBackground(){
+  return `
+    <div class="grid-6">
+      <label class="span6">Admitting Dx<input id="admit_dx" type="text" placeholder="e.g., Prematurity, RDS, IVH grade II"></label>
+      <label class="span2">Gestational Age<input id="ga" type="text" maxlength="10" placeholder="e.g., 29 4/7"></label>
+      <label class="span2">Postmenstrual Age<input id="pma" type="text" maxlength="10" placeholder="e.g., 34 2/7"></label>
+      <label class="span2">Feeding Order<input id="feed_order" type="text" maxlength="65" placeholder="e.g., PO ad lib, q3h"></label>
+      <div class="span6 field">
+        <span>SLP Order</span>
+        <div class="inline-cbs">
+          <label><input type="checkbox" name="slp_order_cb" value="SLP Eval &amp; Tx"> SLP Eval &amp; Tx</label>
+          <label><input type="checkbox" name="slp_order_cb" value="High Risk SLP Eval"> High Risk SLP Eval</label>
+        </div>
+      </div>
+      <div class="span6 field">
+        <span>Feeding Difficulties Secondary To:</span>
+        <div class="inline-cbs">
+          <label><input type="checkbox" name="feed_diff_cb" value="prematurity"> prematurity</label>
+          <label><input type="checkbox" name="feed_diff_cb" value="neuro-immaturity"> neuro-immaturity</label>
+          <label><input type="checkbox" name="feed_diff_cb" value="medical dx/hx"> medical dx/hx</label>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCbCommentTags(sec){
+  // Load or initialize the section's checkbox list from state (persisted per-section)
+  if (!CHECKBOX_STATE[sec.id]) {
+    CHECKBOX_STATE[sec.id] = loadCheckboxesFor(sec.id);
+    if (!localStorage.getItem(CHECKBOX_PREFIX + sec.id)) saveCheckboxesFor(sec.id);
+  }
+  return `
+    <div class="cb-comment-row">
+      <div class="cb-group" data-section-id="${sec.id}">
+        <div data-role="cb-list">${renderCheckboxListHtml(sec.id)}</div>
+        <div class="cb-add">
+          <input type="text" placeholder="Add option…" data-role="cb-input">
+          <button data-action="add-cb">+ Add</button>
+        </div>
+      </div>
+      <div class="comment-col">
+        <textarea id="${sec.commentId}" placeholder="${escapeAttr(sec.commentLabel)} — type or click a tag…"></textarea>
+        ${renderTagBarMarkup(sec.commentId)}
+      </div>
+    </div>
+  `;
+}
+
+// Renders just the <label>...</label> checkbox items for one section, based on
+// its current CHECKBOX_STATE array. Used both on initial render and on rerender
+// after add/delete/reset.
+function renderCheckboxListHtml(sectionId){
+  const boxes = CHECKBOX_STATE[sectionId] || [];
+  return boxes.map(cb => {
+    const safe = escapeAttr(cb);
+    return `<label>
+      <input type="checkbox" name="${sectionId}_cb" value="${safe}">
+      <span>${escapeHtml(cb)}</span>
+      <span class="cb-del" data-action="del-cb" data-value="${safe}" title="Remove this option">×</span>
+    </label>`;
+  }).join("");
+}
+
+function renderMultiComment(sec){
+  let html = "";
+  sec.blocks.forEach(block => {
+    html += `
+      <div class="multi-comment-block">
+        <span class="field-label">${escapeHtml(block.commentLabel)}</span>
+        <textarea id="${block.commentId}" placeholder="Type freely or click a tag below…"></textarea>
+        ${renderTagBarMarkup(block.commentId)}
+      </div>
+    `;
+  });
+  return html;
+}
+
+function renderLogistics(){
+  return `
+    <div class="grid-6">
+      <label class="span3">Bottle<input id="bottle" type="text" placeholder="e.g., Dr. Brown's Preemie"></label>
+      <label class="span3">Feeding Position<input id="feedingPosition" type="text" placeholder="e.g., elevated side-lying"></label>
+      <label class="span3">Length of Feed<input id="lengthOfFeed" type="text" placeholder="e.g., 20 minutes"></label>
+      <label class="span3">Volume Consumed<input id="volumeConsumed" type="text" placeholder="e.g., 60 mL"></label>
+      <label class="span6">Strategies Used (free text)<textarea id="strategiesUsed" placeholder="Brief summary of strategies applied in this feed…"></textarea></label>
+      <label class="span6">Plan of Care / Frequency<textarea id="planOfCare" placeholder="e.g., Continue cue-based feeding; reassess in 48h…"></textarea></label>
+    </div>
+  `;
+}
+
+function renderTagBarMarkup(commentId){
+  return `
+    <div class="tag-section" data-comment-id="${commentId}">
+      <div class="tag-list" data-role="list"></div>
+      <div class="tag-input">
+        <input type="text" placeholder="Add a tag or smart tag (parent: mini1, mini2, …)" data-role="input">
+        <button class="primary" data-action="add">+ Add</button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================================
+// Tag management (one localStorage key per comment textarea)
+// ============================================================================
+const TAG_STATE = {};
+
+function defaultsFor(commentId){
+  for (const sec of SECTIONS) {
+    if (sec.commentId === commentId) return sec.defaultTags || [];
+    if (sec.blocks) for (const b of sec.blocks) if (b.commentId === commentId) return b.defaultTags || [];
+  }
+  return [];
+}
+function loadTagsFor(commentId){
+  try {
+    const stored = localStorage.getItem(TAG_PREFIX + commentId);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return Array.isArray(parsed) ? parsed : [...defaultsFor(commentId)];
+    }
+  } catch (e) { console.warn("loadTags", commentId, e); }
+  return [...defaultsFor(commentId)];
+}
+function saveTagsFor(commentId){
+  try { localStorage.setItem(TAG_PREFIX + commentId, JSON.stringify(TAG_STATE[commentId] || [])); }
+  catch (e) { console.warn("saveTags", commentId, e); }
+}
+function mountTagBar(barEl){
+  const commentId = barEl.dataset.commentId;
+  if (!commentId) return;
+  if (!TAG_STATE[commentId]) {
+    TAG_STATE[commentId] = loadTagsFor(commentId);
+    if (!localStorage.getItem(TAG_PREFIX + commentId)) saveTagsFor(commentId);
+  }
+  renderTagList(barEl);
+  barEl.querySelector('[data-action="add"]').addEventListener("click", () => addTag(barEl));
+  // Reset button was moved to the section-level ⋯ menu — still wire up if present.
+  const _resetBtn = barEl.querySelector('[data-action="reset"]');
+  if (_resetBtn) _resetBtn.addEventListener("click", () => resetTags(barEl));
+  barEl.querySelector('[data-role="input"]').addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); addTag(barEl); }
+  });
+}
+function renderTagList(barEl){
+  const commentId = barEl.dataset.commentId;
+  const list = barEl.querySelector('[data-role="list"]');
+  const tags = TAG_STATE[commentId] || [];
+  list.innerHTML = "";
+  if (!tags.length) {
+    const hint = document.createElement("span");
+    hint.className = "empty-hint";
+    hint.textContent = "No tags yet — add some below.";
+    list.appendChild(hint);
+    return;
+  }
+  tags.forEach((tag, i) => {
+    const chip = document.createElement("div");
+    chip.className = "tag";
+    chip.draggable = true;
+    chip.dataset.index = String(i);
+
+    const handle = document.createElement("span");
+    handle.className = "tag-drag-handle";
+    handle.textContent = "⋮⋮";
+    handle.title = "Drag to reorder";
+
+    // Tag-type detection. Two special formats, checked in order:
+    //   ALIAS: "<short label> long text to insert"
+    //     — chip shows the short label; click inserts the long text.
+    //   SMART: "parent: mini1, mini2, mini3"
+    //     — chip opens a popup where clinician picks one or more sub-tags.
+    // Otherwise it's a plain tag.
+    const alias  = parseAliasTag(tag);
+    const parsed = alias ? { isSmart:false } : parseSmartTag(tag);
+    if (alias)          chip.classList.add("tag-alias");
+    else if (parsed.isSmart) chip.classList.add("tag-smart");
+
+    const txt = document.createElement("span");
+    txt.className = "tag-text";
+    txt.textContent = alias ? alias.display : (parsed.isSmart ? parsed.parent : tag);
+
+    const del = document.createElement("span");
+    del.className = "tag-delete";
+    del.textContent = "×";
+    del.title = "Delete this tag";
+    del.addEventListener("click", e => {
+      e.stopPropagation();
+      deleteTagAtIndex(barEl, i);
+    });
+
+    chip.appendChild(handle);
+    chip.appendChild(txt);
+    chip.appendChild(del);
+
+    // Cursor capture: on mousedown, snapshot the textarea's caret position
+    // BEFORE focus moves to the chip. Used by insertTagAtCaret in the
+    // Impressions section. We can't preventDefault mousedown anymore
+    // because that would block HTML5 drag initiation.
+    chip.addEventListener("mousedown", () => {
+      const ta = document.getElementById(commentId);
+      if (ta && document.activeElement === ta) {
+        LAST_CURSOR[commentId] = { start: ta.selectionStart, end: ta.selectionEnd };
+      }
+    });
+
+    chip.addEventListener("click", () => {
+      if (parsed.isSmart) {
+        openSmartPopup(chip, commentId, parsed);
+        return;
+      }
+      // Alias tag inserts the expanded long text; regular tag inserts as-is.
+      const toInsert = alias ? alias.insert : tag;
+      insertTag(commentId, toInsert);
+      chip.classList.add("flash");
+      setTimeout(() => chip.classList.remove("flash"), 500);
+    });
+
+    // Drag & drop reordering
+    chip.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", String(i));
+      e.dataTransfer.effectAllowed = "move";
+      chip.classList.add("dragging");
+    });
+    chip.addEventListener("dragend", () => {
+      chip.classList.remove("dragging");
+      list.querySelectorAll(".drop-before, .drop-after").forEach(el =>
+        el.classList.remove("drop-before", "drop-after"));
+    });
+    chip.addEventListener("dragover", e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      const rect = chip.getBoundingClientRect();
+      const isLeftHalf = (e.clientX - rect.left) < rect.width / 2;
+      chip.classList.toggle("drop-before", isLeftHalf);
+      chip.classList.toggle("drop-after", !isLeftHalf);
+    });
+    chip.addEventListener("dragleave", () => {
+      chip.classList.remove("drop-before", "drop-after");
+    });
+    chip.addEventListener("drop", e => {
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+      const isLeftHalf = chip.classList.contains("drop-before");
+      chip.classList.remove("drop-before", "drop-after");
+      if (isNaN(fromIdx) || fromIdx === i) return;
+      let toIdx = isLeftHalf ? i : i + 1;
+      // Adjust because we splice-remove before splice-insert
+      if (fromIdx < toIdx) toIdx--;
+      const tagsArr = TAG_STATE[commentId];
+      const [moved] = tagsArr.splice(fromIdx, 1);
+      tagsArr.splice(toIdx, 0, moved);
+      saveTagsFor(commentId);
+      renderTagList(barEl);
+    });
+
+    list.appendChild(chip);
+  });
+}
+
+// Track the textarea caret position captured BEFORE a tag chip steals focus.
+// Consumed once by insertTagAtCaret (Impressions section) and then cleared.
+const LAST_CURSOR = {};
+
+// ============================================================================
+// Smart tags — tags formatted as "parent: mini1, mini2, mini3" open a popup
+// where the clinician picks one or more mini options; the insertion becomes
+// "parent (mini1, mini2)".
+// ============================================================================
+// Alias tag: "<short label> long text to insert"
+// The chip shows only the short label (inside angle brackets); clicking
+// inserts the long text. Example:
+//   "<Consistent rooting> Consistent rooting when lips are stroked."
+// Returns null for anything that doesn't fit the pattern.
+function parseAliasTag(text){
+  if (typeof text !== "string" || !text.startsWith("<")) return null;
+  const closeIdx = text.indexOf(">");
+  if (closeIdx < 2) return null;   // need at least one char inside <>
+  const display = text.substring(1, closeIdx).trim();
+  const insert  = text.substring(closeIdx + 1).trim();
+  if (!display || !insert) return null;
+  return { display, insert };
+}
+
+function parseSmartTag(text){
+  const colonIdx = text.indexOf(":");
+  if (colonIdx < 0) return { isSmart:false, parent:text, mini:[] };
+  const parent = text.substring(0, colonIdx).trim();
+  const rest = text.substring(colonIdx + 1).trim();
+  // Require a comma in the tail so plain sentences like "Time: 10:00" or
+  // "Note: quiet" don't get misidentified as smart tags.
+  if (!rest || !rest.includes(",") || !parent) {
+    return { isSmart:false, parent:text, mini:[] };
+  }
+  const mini = rest.split(",").map(s => s.trim()).filter(Boolean);
+  if (mini.length < 2) return { isSmart:false, parent:text, mini:[] };
+  return { isSmart:true, parent, mini };
+}
+
+let _smartPopupEl = null;
+
+function openSmartPopup(chip, commentId, parsed){
+  closeSmartPopup();
+
+  const selected = new Set();
+
+  const popup = document.createElement("div");
+  popup.className = "smart-popup";
+  popup.innerHTML = `
+    <div class="smart-popup-header">
+      <span class="smart-popup-parent"></span>
+      <button class="smart-popup-close" title="Close">×</button>
+    </div>
+    <div class="smart-popup-mini"></div>
+    <div class="smart-popup-actions">
+      <button class="link-btn" data-role="cancel">Cancel</button>
+      <button class="primary" data-role="insert">Insert</button>
+    </div>
+  `;
+  popup.querySelector(".smart-popup-parent").textContent = parsed.parent;
+
+  const miniHost = popup.querySelector(".smart-popup-mini");
+  const insertBtn = popup.querySelector('[data-role="insert"]');
+
+  parsed.mini.forEach(m => {
+    const btn = document.createElement("button");
+    btn.className = "smart-mini";
+    btn.textContent = m;
+    btn.dataset.mini = m;
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      if (selected.has(m)) { selected.delete(m); btn.classList.remove("selected"); }
+      else                 { selected.add(m);    btn.classList.add("selected"); }
+    });
+    miniHost.appendChild(btn);
+  });
+
+  const commit = () => {
+    // No sub-tags picked = insert just the parent, no parens.
+    // One or more picked = "parent (mini1, mini2, ...)"
+    const combined = selected.size === 0
+      ? parsed.parent
+      : `${parsed.parent} (${[...selected].join(", ")})`;
+    insertTag(commentId, combined);
+    // Flash the chip for feedback
+    chip.classList.add("flash");
+    setTimeout(() => chip.classList.remove("flash"), 500);
+    closeSmartPopup();
+  };
+  const cancel = () => closeSmartPopup();
+
+  insertBtn.addEventListener("click", e => { e.stopPropagation(); commit(); });
+  popup.querySelector('[data-role="cancel"]').addEventListener("click", e => { e.stopPropagation(); cancel(); });
+  popup.querySelector(".smart-popup-close").addEventListener("click", e => { e.stopPropagation(); cancel(); });
+
+  // Enter to insert (once at least one is picked), Escape to cancel
+  const keyHandler = e => {
+    if (e.key === "Enter") { e.preventDefault(); commit(); }
+    else if (e.key === "Escape") { e.preventDefault(); cancel(); }
+  };
+  popup._keyHandler = keyHandler;
+  document.addEventListener("keydown", keyHandler);
+
+  document.body.appendChild(popup);
+  _smartPopupEl = popup;
+
+  // Position after append so we can measure its size
+  const rect = chip.getBoundingClientRect();
+  const popRect = popup.getBoundingClientRect();
+  let top = rect.bottom + 6;
+  let left = rect.left;
+  if (top + popRect.height > window.innerHeight - 12) {
+    top = Math.max(12, rect.top - popRect.height - 6);
+  }
+  if (left + popRect.width > window.innerWidth - 12) {
+    left = Math.max(12, window.innerWidth - popRect.width - 12);
+  }
+  popup.style.top = `${top}px`;
+  popup.style.left = `${left}px`;
+}
+
+function closeSmartPopup(){
+  if (_smartPopupEl) {
+    if (_smartPopupEl._keyHandler) document.removeEventListener("keydown", _smartPopupEl._keyHandler);
+    _smartPopupEl.remove();
+    _smartPopupEl = null;
+  }
+}
+
+// Close smart popup on outside click
+document.addEventListener("click", e => {
+  if (!_smartPopupEl) return;
+  if (e.target.closest(".smart-popup") || e.target.closest(".tag-smart")) return;
+  closeSmartPopup();
+});
+
+// Delete with undo — routes through the toast so the user can restore.
+function deleteTagAtIndex(barEl, index){
+  const commentId = barEl.dataset.commentId;
+  const tagsArr = TAG_STATE[commentId] || [];
+  if (index < 0 || index >= tagsArr.length) return;
+  const [removed] = tagsArr.splice(index, 1);
+  saveTagsFor(commentId);
+  renderTagList(barEl);
+  showToast(`Deleted "${removed}"`, "Undo", () => {
+    const arr = TAG_STATE[commentId] || (TAG_STATE[commentId] = []);
+    const insertAt = Math.min(index, arr.length);
+    arr.splice(insertAt, 0, removed);
+    saveTagsFor(commentId);
+    renderTagList(barEl);
+  });
+}
+
+// Simple toast at bottom-right with an action button. Replaces any existing.
+let _toastTimer = null;
+function showToast(message, actionLabel, actionFn, duration = 5000){
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  const msg = document.createElement("span");
+  msg.className = "toast-msg";
+  msg.textContent = message;
+  toast.appendChild(msg);
+  if (actionLabel) {
+    const btn = document.createElement("button");
+    btn.className = "toast-action";
+    btn.textContent = actionLabel;
+    btn.addEventListener("click", () => {
+      if (actionFn) actionFn();
+      toast.remove();
+      if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
+    });
+    toast.appendChild(btn);
+  }
+  document.body.appendChild(toast);
+
+  _toastTimer = setTimeout(() => { toast.remove(); _toastTimer = null; }, duration);
+}
+
+// ============================================================================
+// Export / Import: dump the customizable tag banks and checkbox-option lists
+// as a portable JSON file. Users can share their curated set between browsers
+// or with colleagues, and restore after clearing browser data.
+// ============================================================================
+function exportCustomizations(){
+  const data = {
+    version: 1,
+    app: "nicu-eval-onepage-workshop",
+    exported: new Date().toISOString(),
+    checkboxes: { ...CHECKBOX_STATE },
+    tags:       { ...TAG_STATE }
+  };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().split("T")[0];
+  a.href = url;
+  a.download = `nicu-eval-customizations-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  const cbCount = Object.keys(data.checkboxes).length;
+  const tgCount = Object.keys(data.tags).length;
+  showToast(`Exported ${cbCount} checkbox groups + ${tgCount} tag banks`, null, null, 3500);
+}
+
+function importCustomizations(){
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json,.json";
+  input.addEventListener("change", async e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      const clean = validateImportedData(parsed);
+      if (!clean) { alert("That JSON file doesn't look like a valid customizations export."); return; }
+      applyImportedCustomizations(clean);
+    } catch (err) {
+      alert("Could not read that file — please check it's a valid JSON export.\n\n" + err.message);
+    }
+  });
+  input.click();
+}
+
+// Validate & sanitize imported data: keys must be strings and values must be
+// arrays of strings. Anything malformed is dropped rather than blindly copied.
+function validateImportedData(data){
+  if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+  const clean = { checkboxes: {}, tags: {} };
+  const readMap = (source, target) => {
+    if (!source || typeof source !== "object") return;
+    for (const [k, v] of Object.entries(source)) {
+      if (typeof k !== "string") continue;
+      if (!Array.isArray(v)) continue;
+      const items = v.filter(x => typeof x === "string" && x.trim().length > 0);
+      if (items.length) target[k] = items.slice();
+    }
+  };
+  readMap(data.checkboxes, clean.checkboxes);
+  readMap(data.tags,       clean.tags);
+  if (!Object.keys(clean.checkboxes).length && !Object.keys(clean.tags).length) return null;
+  return clean;
+}
+
+function applyImportedCustomizations(clean){
+  const cbCount = Object.keys(clean.checkboxes).length;
+  const tgCount = Object.keys(clean.tags).length;
+  const proceed = confirm(
+    `Import ${cbCount} checkbox group(s) and ${tgCount} tag bank(s)?\n\n` +
+    `This will REPLACE your current customizations for the affected sections.\n` +
+    `(Sections not included in the file are left untouched.)`
+  );
+  if (!proceed) return;
+
+  // Snapshot the currently-checked checkboxes so we can restore selections
+  // that still make sense after re-render.
+  const checkedSnapshot = {};
+  document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+    if (!cb.name) return;
+    (checkedSnapshot[cb.name] = checkedSnapshot[cb.name] || new Set()).add(cb.value);
+  });
+
+  // Replace only the imported keys — other sections keep their current state.
+  Object.entries(clean.checkboxes).forEach(([k, v]) => {
+    CHECKBOX_STATE[k] = v.slice();
+    saveCheckboxesFor(k);
+  });
+  Object.entries(clean.tags).forEach(([k, v]) => {
+    TAG_STATE[k] = v.slice();
+    saveTagsFor(k);
+  });
+
+  // Re-render everything to reflect the new options
+  renderAll();
+
+  // Restore checkbox selections for values that still exist post-import
+  Object.entries(checkedSnapshot).forEach(([name, values]) => {
+    document.querySelectorAll(`input[type="checkbox"][name="${name}"]`).forEach(cb => {
+      if (values.has(cb.value)) cb.checked = true;
+    });
+  });
+
+  regen();
+  updateCompletionDots();
+  showToast(`Imported ${cbCount} checkbox group(s) + ${tgCount} tag bank(s)`, null, null, 4000);
+}
+function addTag(barEl){
+  const commentId = barEl.dataset.commentId;
+  const input = barEl.querySelector('[data-role="input"]');
+  const value = input.value.trim();
+  if (!value) return;
+  const tags = TAG_STATE[commentId] || (TAG_STATE[commentId] = []);
+  if (tags.some(t => t.toLowerCase() === value.toLowerCase())) {
+    alert("That tag already exists in this section.");
+    input.select();
+    return;
+  }
+  tags.push(value);
+  saveTagsFor(commentId);
+  renderTagList(barEl);
+  input.value = "";
+  input.focus();
+}
+function resetTags(barEl){
+  const commentId = barEl.dataset.commentId;
+  if (!confirm("Reset this section's tags to defaults? Custom tags here will be lost.")) return;
+  TAG_STATE[commentId] = [...defaultsFor(commentId)];
+  saveTagsFor(commentId);
+  renderTagList(barEl);
+}
+// Comment textareas where tag clicks insert AT THE CARET (respecting line
+// breaks and multi-paragraph flow). Everything else uses the original
+// append-at-end behavior — because those comments get sanitize()'d and
+// wrapped to 50 chars in the output, so mid-comment line breaks would
+// break the EMR paste format.
+const CURSOR_INSERT_COMMENTS = new Set(["impressions"]);
+
+function insertTag(commentId, text){
+  const ta = document.getElementById(commentId);
+  if (!ta) return;
+  if (CURSOR_INSERT_COMMENTS.has(commentId)) {
+    insertTagAtCaret(ta, text);
+  } else {
+    insertTagAtEnd(ta, text);
+  }
+  scheduleRegen();
+}
+
+// Original behavior: always append at the end of the textarea, with smart
+// separator handling. Keeps section comments as a single flowing sentence.
+function insertTagAtEnd(ta, text){
+  const current = ta.value.replace(/\s+$/, "");
+  if (!current) {
+    ta.value = text + ".";
+  } else {
+    const endsWithPunct = /[.!?]$/.test(current);
+    const sep = endsWithPunct ? " " : ". ";
+    ta.value = current + sep + text + ".";
+  }
+  ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
+}
+
+// Cursor-aware insertion: inserts at selectionStart / selectionEnd (or
+// replaces the current selection). Used for the Impressions textarea
+// where multi-paragraph clinical thought is expected.
+function insertTagAtCaret(ta, text){
+  // Prefer the caret position captured by the tag chip's mousedown handler
+  // BEFORE focus moved to the chip. Falls back to whatever the textarea's
+  // selection currently reports, or the end of the text.
+  let insertStart, insertEnd;
+  const captured = LAST_CURSOR[ta.id];
+  if (captured) {
+    insertStart = captured.start;
+    insertEnd   = captured.end;
+    delete LAST_CURSOR[ta.id];
+  } else {
+    const hasBeenFocused = ta.value.length === 0 || ta.selectionStart !== 0 || document.activeElement === ta;
+    insertStart = hasBeenFocused ? ta.selectionStart : ta.value.length;
+    insertEnd   = hasBeenFocused ? ta.selectionEnd   : ta.value.length;
+  }
+
+  const before = ta.value.substring(0, insertStart);
+  const after  = ta.value.substring(insertEnd);
+
+  const tagText = /[.!?]$/.test(text) ? text : text + ".";
+
+  // Leading separator based on what's immediately before the caret.
+  let lead = "";
+  if (before.length > 0) {
+    const last = before[before.length - 1];
+    if (last === "\n" || /\s/.test(last)) {
+      lead = "";
+    } else if (/[.!?]/.test(last)) {
+      lead = " ";
+    } else {
+      lead = ". ";
+    }
+  }
+
+  // Trailing separator based on what's immediately after the caret.
+  let trail = "";
+  if (after.length > 0 && !/^\s/.test(after)) {
+    trail = " ";
+  }
+
+  const insertion = lead + tagText + trail;
+  ta.value = before + insertion + after;
+
+  const newCaret = insertStart + lead.length + tagText.length;
+  ta.focus();
+  ta.setSelectionRange(newCaret, newCaret);
+}
+
+// ============================================================================
+// Output generation (NICU Eval 2.1 template)
+// ============================================================================
+function wrapText(text, max){
+  return text.split('\n').map(line => {
+    if (line.trim() === '') return '';
+    const words = line.split(' ');
+    let wrapped = '', cur = '';
+    words.forEach(w => {
+      if ((cur + w).length > max) { wrapped += cur.trim() + '\n'; cur = ''; }
+      cur += w + ' ';
+    });
+    return wrapped + cur.trim();
+  }).join('\n');
+}
+function sanitize(text, width = 50){
+  return wrapText(((text || '').trim() || 'n/a'), width);
+}
+function getVal(id){ return (document.getElementById(id)?.value || "").trim(); }
+function getCbList(name){
+  const vals = [];
+  document.querySelectorAll(`input[name="${name}"]:checked`).forEach(cb => vals.push(cb.value));
+  return vals;
+}
+
+function regen(){
+  const admittingDx = wrapText(getVal("admit_dx"), 65);
+  const slpDxOptions = getCbList("feed_diff_cb").join(", ");
+  const ga = getVal("ga");
+  const pma = getVal("pma");
+  const slpOrder = getCbList("slp_order_cb").join(", ");
+  const feedingOrder = getVal("feed_order");
+
+  const cbBlock = name => {
+    const vals = getCbList(name + "_cb");
+    return vals.length ? vals.join('\n') + '\n' : '';
+  };
+  const readiness               = cbBlock("readiness");
+  const oralMotor               = cbBlock("oralmotor");
+  const ssbOptions              = cbBlock("ssb");
+  const physiologicStability    = cbBlock("physio");
+  const feedingEngagement       = cbBlock("engagement");
+  const stateSensory            = cbBlock("stateSensory");
+  const postFeedPresentation    = cbBlock("postFeed");
+  const feedingChecklist        = cbBlock("recommendations");
+
+  const readinessComment            = sanitize(getVal("readinessComment"));
+  const oralMotorComment            = sanitize(getVal("oralMotorComment"));
+  const ssbComment                  = sanitize(getVal("ssbComment"));
+  const physiologicStabilityComment = sanitize(getVal("physiologicStabilityComment"));
+  const feedingEngagementComment    = sanitize(getVal("feedingEngagementComment"));
+  const feedingToleranceComment     = sanitize(getVal("feedingToleranceComment"));
+  const feedingStrategiesComment    = sanitize(getVal("feedingStrategiesComment"));
+  const stateSensoryComment         = sanitize(getVal("stateSensoryComment"));
+  const postFeedComment             = sanitize(getVal("postFeedComment"));
+  const recommendationsComment      = sanitize(getVal("recommendationsComment"));
+
+  const compoundingRisk     = wrapText(getVal("compoundingRisk"), 50);
+  const historyRelatedToSLP = wrapText(getVal("historyRelatedToSLP"), 70);
+  const impressions         = wrapText(getVal("impressions"), 70);
+
+  const bottle           = getVal("bottle");
+  const feedingPosition  = getVal("feedingPosition");
+  const lengthOfFeed     = getVal("lengthOfFeed");
+  const volumeConsumed   = getVal("volumeConsumed");
+  const strategiesUsed   = getVal("strategiesUsed");
+  const planOfCare       = getVal("planOfCare");
+
+  const output = `${admittingDx}\n\nFeeding difficulties secondary to ${slpDxOptions}\n${ga}\n${pma}\n${slpOrder}\n${feedingOrder}\n${readiness}\n${readinessComment}\n\n${oralMotor}\n${oralMotorComment}\n\n${ssbOptions}\n${ssbComment}\n\n${physiologicStability}\n${physiologicStabilityComment}\n\n${feedingEngagement}\n${feedingEngagementComment}\n\n${feedingToleranceComment}\n\n${feedingStrategiesComment}\n\n${stateSensory}\n${stateSensoryComment}\n\n${postFeedPresentation}\n${postFeedComment}\n\n${compoundingRisk}\n\n${historyRelatedToSLP}\n\n\n${impressions}\n\n\n${feedingChecklist}\n${recommendationsComment}\n\n${bottle}\n${feedingPosition}\n\n\n${lengthOfFeed}\n${volumeConsumed}\n${strategiesUsed}\n\n${planOfCare}`;
+
+  document.getElementById("output").textContent = output;
+}
+
+let regenTimer = null;
+function scheduleRegen(){
+  clearTimeout(regenTimer);
+  regenTimer = setTimeout(regen, 250);
+}
+
+function copyOutput(){
+  regen();
+  const txt = document.getElementById("output").textContent;
+  navigator.clipboard.writeText(txt).then(
+    () => { const b = event.target; const o = b.textContent; b.textContent = "✓ Copied"; setTimeout(() => b.textContent = o, 1500); },
+    () => alert("Could not copy. Select the text and copy manually.")
+  );
+}
+
+function scrollToOutput(){
+  document.getElementById("sec_output").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+// ============================================================================
+// Completion dots — TOC links show a filled dot once their section has data
+// ============================================================================
+function updateCompletionDots(){
+  SECTIONS.forEach(sec => {
+    const block = document.getElementById(`sec_${sec.id}`);
+    if (!block) return;
+    let hasContent = false;
+    block.querySelectorAll('input, textarea, select').forEach(el => {
+      if (el.dataset && el.dataset.role === 'input') return; // skip tag-input fields
+      if (el.type === 'checkbox') { if (el.checked) hasContent = true; }
+      else if (el.value && el.value.trim()) hasContent = true;
+    });
+    const link = document.querySelector(`.toc a[data-target="sec_${sec.id}"]`);
+    if (link) link.classList.toggle('completed', hasContent);
+  });
+}
+
+// ============================================================================
+// Scroll-spy — highlights the TOC link for whichever section is in view
+// ============================================================================
+function setupScrollSpy(){
+  const tocEl = document.getElementById('toc');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`.toc a[data-target="${id}"]`);
+        if (link) {
+          link.classList.add('active');
+          // Auto-scroll the TOC *horizontally* so the active chip stays visible.
+          // Important: must NOT use scrollIntoView here — it can affect the
+          // document's vertical scroll position and cause the page to bounce
+          // back up while the user is trying to scroll down.
+          const targetLeft = link.offsetLeft - tocEl.clientWidth / 2 + link.offsetWidth / 2;
+          tocEl.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  document.querySelectorAll('.section-block, .output-section').forEach(s => observer.observe(s));
+}
+
+// ============================================================================
+// Clear form
+// ============================================================================
+function clearForm(){
+  if (!confirm("Clear all entered data? (Tags will not be touched.)")) return;
+  document.querySelectorAll("input, textarea, select").forEach(el => {
+    if (el.dataset.role === "input") return;  // skip tag-input fields
+    if (el.type === "checkbox") el.checked = false;
+    else el.value = "";
+  });
+  regen();
+  updateCompletionDots();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ============================================================================
+// Helpers
+// ============================================================================
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+// ============================================================================
+// Init
+// ============================================================================
+renderAll();
+regen();
+setupScrollSpy();
+
+// Auto-regen on any input/change in the form
+document.addEventListener('input', e => {
+  if (e.target.dataset && e.target.dataset.role === 'input') return; // skip tag-input field
+  scheduleRegen();
+  updateCompletionDots();
+});
+document.addEventListener('change', e => {
+  if (e.target.type === 'checkbox') { regen(); updateCompletionDots(); }
+});
+
+updateCompletionDots();
+</script>
+</body>
+</html>
