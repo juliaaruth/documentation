@@ -5,23 +5,23 @@
 <title>NICU Feeding Evaluation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     /* Warm minimal palette */
-    --bg: #171311;
-    --bg-elevated: #201b18;
-    --ink: #F4EDE4;
-    --text: #E0D1C2;
-    --muted: #B9A28E;
-    --muted-2: #9B7F68;
-    --line: #3B312D;
-    --line-soft: #483F3B;
-    --accent: #D8895A;
-    --accent-hover: #E39A67;
-    --accent-soft: rgba(216,137,90,0.18);
-    --tag-bg: #352E2A;
-    --tag-hover: #433A36;
+    --bg:#171311;
+    --bg-elevated:#201b18;
+    --ink:#F4EDE4;
+    --text:#E0D1C2;
+    --muted:#B9A28E;
+    --muted-2:#9B7F68;
+    --line:#3B312D;
+    --line-soft:#483F3B;
+    --accent:#D8895A;
+    --accent-hover:#E39A67;
+    --accent-soft:rgba(216,137,90,0.18);
+    --tag-bg:#352E2A;
+    --tag-hover:#433A36;
     --shadow-sm:0 1px 2px rgba(40,30,20,0.04);
     --shadow-md:0 2px 4px rgba(40,30,20,0.04), 0 4px 14px rgba(40,30,20,0.05);
   }
@@ -30,7 +30,7 @@
   body{
     font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
     background:var(--bg);color:var(--text);margin:0;padding:0;
-    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    font-size:15px;line-height:1.6;font-weight:500;-webkit-font-smoothing:antialiased;
     font-feature-settings:"cv11";
   }
   .wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
@@ -42,7 +42,7 @@
     gap:24px;flex-wrap:wrap;
   }
   header h1{
-    margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em;color:var(--ink);
+    margin:0;font-size:24px;font-weight:700;letter-spacing:-0.02em;color:var(--ink);
   }
   header .sub{color:var(--muted);font-size:13px;margin-top:6px;}
   header .actions{display:flex;gap:10px;}
@@ -51,7 +51,7 @@
   button{
     font:inherit;font-size:13px;padding:7px 14px;
     border:1px solid var(--line);background:var(--bg-elevated);cursor:pointer;
-    border-radius:6px;color:var(--ink);font-weight:500;
+    border-radius:6px;color:var(--ink);font-weight:600;
     transition:all .15s ease;
   }
   button:hover{background:var(--line-soft);border-color:var(--muted-2);}
@@ -59,7 +59,7 @@
   button.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
   .link-btn{
     background:transparent;border:none;color:var(--muted);font-size:12px;
-    padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-weight:400;
+    padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px;font-weight:500;
   }
   .link-btn:hover{color:var(--accent);}
 
@@ -75,7 +75,7 @@
     flex-shrink:0;font-size:13px;color:var(--muted);text-decoration:none;
     padding:6px 12px;border-radius:6px;
     display:flex;align-items:center;gap:6px;
-    transition:all .15s;white-space:nowrap;font-weight:500;
+    transition:all .15s;white-space:nowrap;font-weight:600;
   }
   .toc a::before{
     content:'';width:6px;height:6px;border-radius:50%;
@@ -108,7 +108,7 @@
   }
   .section-block:first-child{padding-top:20px;}
   .section-block h2{
-    margin:0;font-size:18px;font-weight:600;color:var(--ink);
+    margin:0;font-size:18px;font-weight:700;color:var(--ink);
     letter-spacing:-0.01em;
   }
   .section-header{
@@ -134,21 +134,21 @@
   .section-menu-list button{
     display:block;width:100%;text-align:left;
     background:transparent;border:none;padding:8px 12px;
-    font-size:13px;color:var(--text);cursor:pointer;border-radius:4px;font-weight:400;
+    font-size:13px;color:var(--text);cursor:pointer;border-radius:4px;font-weight:500;
   }
   .section-menu-list button:hover{background:var(--line-soft);color:var(--ink);}
 
   /* Field labels */
   .field-label{
     font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0;
-    font-weight:500;margin-bottom:6px;display:block;
+    font-weight:600;margin-bottom:6px;display:block;
   }
 
   /* Inputs */
   input[type="text"],input[type="number"],select,textarea{
     font:inherit;font-size:14px;padding:9px 12px;
     border:1px solid var(--line);border-radius:6px;
-    background:var(--bg-elevated);color:var(--text);width:100%;
+    background:var(--bg-elevated);color:var(--text);width:100%;font-weight:500;
     transition:border-color .15s,box-shadow .15s;
   }
   input:focus,select:focus,textarea:focus{
@@ -161,7 +161,7 @@
   .grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
   .grid-6 label,.grid-6 .field{
     display:flex;flex-direction:column;font-size:12px;color:var(--muted);
-    text-transform:none;letter-spacing:0;font-weight:500;gap:6px;
+    text-transform:none;letter-spacing:0;font-weight:600;gap:6px;
   }
   .grid-6 .span2{grid-column:span 2;}
   .grid-6 .span3{grid-column:span 3;}
@@ -169,7 +169,7 @@
   .inline-cbs{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:2px;}
   .inline-cbs label{
     display:flex;align-items:center;gap:7px;font-size:14px;color:var(--text);
-    font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;flex-direction:row;
+    font-weight:500;text-transform:none;letter-spacing:0;cursor:pointer;flex-direction:row;
   }
   .inline-cbs input[type="checkbox"]{margin:0;accent-color:var(--accent);}
 
@@ -181,7 +181,7 @@
   .cb-group{display:flex;flex-direction:column;gap:9px;margin-top:0;}
   .cb-group [data-role="cb-list"]{display:flex;flex-direction:column;gap:7px;}
   .cb-group label{
-    display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--text);position:relative;
+    display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;color:var(--text);position:relative;font-weight:500;
   }
   .cb-group input[type="checkbox"]{margin:0;flex-shrink:0;accent-color:var(--accent);}
   .cb-del{
@@ -195,7 +195,7 @@
   }
   .cb-add input{
     flex:1;min-width:100px;font:inherit;font-size:12px;padding:5px 9px;
-    border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--text);
+    border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--text);font-weight:500;
   }
   .cb-add input:focus{outline:none;border-color:var(--accent);}
   .cb-add button{padding:5px 10px;font-size:11px;}
@@ -219,7 +219,7 @@
   .tag{
     display:inline-flex;align-items:center;gap:1px;
     background:transparent;border:none;padding:0;
-    font-size:13px;color:var(--text);cursor:pointer;
+    font-size:13px;color:var(--text);cursor:pointer;font-weight:600;
     transition:color .15s;user-select:none;
   }
   .tag .tag-text{
@@ -278,11 +278,11 @@
     animation:toast-in .15s ease;
   }
   .smart-popup-header{
-    font-size:11px;color:var(--muted);font-weight:500;
+    font-size:11px;color:var(--muted);font-weight:600;
     margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px;
     display:flex;justify-content:space-between;align-items:center;gap:8px;
   }
-  .smart-popup-parent{color:var(--text);text-transform:none;font-weight:600;font-size:12.5px;letter-spacing:0;flex:1;}
+  .smart-popup-parent{color:var(--text);text-transform:none;font-weight:700;font-size:12.5px;letter-spacing:0;flex:1;}
   .smart-popup-close{
     background:transparent;border:none;color:var(--muted);font-size:16px;
     line-height:1;padding:0 4px;cursor:pointer;border-radius:3px;
@@ -293,7 +293,7 @@
   }
   .smart-mini{
     background:var(--tag-bg);border:1px solid transparent;
-    padding:4px 10px;border-radius:6px;font-size:13px;color:var(--text);
+    padding:4px 10px;border-radius:6px;font-size:13px;color:var(--text);font-weight:600;
     cursor:pointer;transition:background .15s,border-color .15s,color .15s;
   }
   .smart-mini:hover{background:var(--tag-hover);}
@@ -319,7 +319,7 @@
   .toast .toast-msg{color:rgba(255,255,255,.85);}
   .toast .toast-action{
     color:#fff;background:transparent;border:none;padding:0;
-    text-decoration:underline;cursor:pointer;font-size:13px;font-weight:600;
+    text-decoration:underline;cursor:pointer;font-size:13px;font-weight:700;
   }
   @keyframes toast-in{
     from{opacity:0;transform:translateY(8px);}
@@ -330,7 +330,7 @@
   .tag-input input{
     flex:1;font:inherit;font-size:13px;padding:7px 11px;
     border:1px solid var(--line);border-radius:6px;
-    background:var(--bg-elevated);color:var(--text);
+    background:var(--bg-elevated);color:var(--text);font-weight:500;
   }
   .tag-input button{padding:7px 14px;font-size:12px;}
 
@@ -345,10 +345,10 @@
     max-height:calc(100vh - 88px);
     scroll-margin-top:72px;
   }
-  .output-section h2{margin:0;font-size:15px;font-weight:600;color:var(--ink);}
+  .output-section h2{margin:0;font-size:15px;font-weight:700;color:var(--ink);}
   .output-section .live-indicator{
     font-size:10.5px;color:var(--accent);background:var(--accent-soft);
-    padding:2px 8px;border-radius:10px;font-style:normal;font-weight:600;
+    padding:2px 8px;border-radius:10px;font-style:normal;font-weight:700;
     margin-left:8px;letter-spacing:.2px;text-transform:uppercase;
   }
   .output-header{
@@ -362,7 +362,7 @@
     border:1px solid var(--line-soft);
     padding:14px;border-radius:6px;
     font-family:"JetBrains Mono",ui-monospace,"SF Mono",Consolas,monospace;
-    font-size:11.5px;color:var(--text);margin:0;
+    font-size:11.5px;color:var(--text);margin:0; font-weight:500;
     flex:1;overflow-y:auto;line-height:1.65;
   }
 
@@ -372,7 +372,7 @@
     margin-top:48px;border-top:1px solid var(--line);
   }
   .footer p{margin:0;padding-top:24px;}
-  .footer b{color:var(--text);font-weight:500;}
+  .footer b{color:var(--text);font-weight:700;}
 
   @media print{
     body{padding:0;background:white;}
@@ -421,7 +421,7 @@
   </div>
 
   <div class="footer">
-    <p><b>Tag persistence:</b> Tags are saved per-section to your browser's localStorage and survive refresh. Each section has its own "Reset to defaults" link. Tags persist across browser sessions but are scoped per browser, per file path, and are not synced.</p>
+    <p><b>Tag persistence:</b> Tags are saved per-section to your browser's localStorage and survive refresh. Each section has its own "Reset to defaults" link. Tags persist across browser sessions as well.</p>
   </div>
 </div>
 
@@ -927,7 +927,6 @@ function mountTagBar(barEl){
   }
   renderTagList(barEl);
   barEl.querySelector('[data-action="add"]').addEventListener("click", () => addTag(barEl));
-  // Reset button was moved to the section-level ⋯ menu — still wire up if present.
   const _resetBtn = barEl.querySelector('[data-action="reset"]');
   if (_resetBtn) _resetBtn.addEventListener("click", () => resetTags(barEl));
   barEl.querySelector('[data-role="input"]').addEventListener("keydown", e => {
@@ -998,359 +997,63 @@ function renderTagList(barEl){
 
     chip.addEventListener("click", () => {
       if (parsed.isSmart) {
-        openSmartPopup(chip, commentId, parsed);
-        return;
+        openSmartPopup(barEl, commentId, tag, parsed, i);
+      } else {
+        insertTagAtComment(commentId, alias ? alias.value : tag);
       }
-      // Alias tag inserts the expanded long text; regular tag inserts as-is.
-      const toInsert = alias ? alias.insert : tag;
-      insertTag(commentId, toInsert);
-      chip.classList.add("flash");
-      setTimeout(() => chip.classList.remove("flash"), 500);
     });
 
-    // Drag & drop reordering
     chip.addEventListener("dragstart", e => {
-      e.dataTransfer.setData("text/plain", String(i));
-      e.dataTransfer.effectAllowed = "move";
+      draggedTag = { barEl, index: i, text: tag };
       chip.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", tag);
     });
+
     chip.addEventListener("dragend", () => {
       chip.classList.remove("dragging");
-      list.querySelectorAll(".drop-before, .drop-after").forEach(el =>
-        el.classList.remove("drop-before", "drop-after"));
+      draggedTag = null;
+      document.querySelectorAll('.tag').forEach(el => {
+        el.classList.remove('drop-before','drop-after');
+      });
     });
+
     chip.addEventListener("dragover", e => {
       e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
+      const items = [...list.children];
+      const currentIndex = items.indexOf(chip);
       const rect = chip.getBoundingClientRect();
-      const isLeftHalf = (e.clientX - rect.left) < rect.width / 2;
-      chip.classList.toggle("drop-before", isLeftHalf);
-      chip.classList.toggle("drop-after", !isLeftHalf);
+      const before = e.clientX < rect.left + rect.width / 2;
+      chip.classList.remove('drop-before','drop-after');
+      chip.classList.add(before ? 'drop-before' : 'drop-after');
     });
-    chip.addEventListener("dragleave", () => {
-      chip.classList.remove("drop-before", "drop-after");
-    });
+
     chip.addEventListener("drop", e => {
       e.preventDefault();
-      const fromIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
-      const isLeftHalf = chip.classList.contains("drop-before");
-      chip.classList.remove("drop-before", "drop-after");
-      if (isNaN(fromIdx) || fromIdx === i) return;
-      let toIdx = isLeftHalf ? i : i + 1;
-      // Adjust because we splice-remove before splice-insert
-      if (fromIdx < toIdx) toIdx--;
-      const tagsArr = TAG_STATE[commentId];
-      const [moved] = tagsArr.splice(fromIdx, 1);
-      tagsArr.splice(toIdx, 0, moved);
-      saveTagsFor(commentId);
-      renderTagList(barEl);
+      const from = draggedTag && draggedTag.index;
+      if (from == null) return;
+      const targetIndex = i;
+      const before = e.clientX < chip.getBoundingClientRect().left + chip.getBoundingClientRect().width / 2;
+      const finalIndex = before ? targetIndex : targetIndex + 1;
+      reorderTagAtIndex(barEl, from, finalIndex);
+      chip.classList.remove('drop-before','drop-after');
     });
 
     list.appendChild(chip);
   });
 }
 
-// Track the textarea caret position captured BEFORE a tag chip steals focus.
-// Consumed once by insertTagAtCaret (Impressions section) and then cleared.
-const LAST_CURSOR = {};
-
-// ============================================================================
-// Smart tags — tags formatted as "parent: mini1, mini2, mini3" open a popup
-// where the clinician picks one or more mini options; the insertion becomes
-// "parent (mini1, mini2)".
-// ============================================================================
-// Alias tag: "<short label> long text to insert"
-// The chip shows only the short label (inside angle brackets); clicking
-// inserts the long text. Example:
-//   "<Consistent rooting> Consistent rooting when lips are stroked."
-// Returns null for anything that doesn't fit the pattern.
-function parseAliasTag(text){
-  if (typeof text !== "string" || !text.startsWith("<")) return null;
-  const closeIdx = text.indexOf(">");
-  if (closeIdx < 2) return null;   // need at least one char inside <>
-  const display = text.substring(1, closeIdx).trim();
-  const insert  = text.substring(closeIdx + 1).trim();
-  if (!display || !insert) return null;
-  return { display, insert };
-}
-
-function parseSmartTag(text){
-  const colonIdx = text.indexOf(":");
-  if (colonIdx < 0) return { isSmart:false, parent:text, mini:[] };
-  const parent = text.substring(0, colonIdx).trim();
-  const rest = text.substring(colonIdx + 1).trim();
-  // Require a comma in the tail so plain sentences like "Time: 10:00" or
-  // "Note: quiet" don't get misidentified as smart tags.
-  if (!rest || !rest.includes(",") || !parent) {
-    return { isSmart:false, parent:text, mini:[] };
-  }
-  const mini = rest.split(",").map(s => s.trim()).filter(Boolean);
-  if (mini.length < 2) return { isSmart:false, parent:text, mini:[] };
-  return { isSmart:true, parent, mini };
-}
-
-let _smartPopupEl = null;
-
-function openSmartPopup(chip, commentId, parsed){
-  closeSmartPopup();
-
-  const selected = new Set();
-
-  const popup = document.createElement("div");
-  popup.className = "smart-popup";
-  popup.innerHTML = `
-    <div class="smart-popup-header">
-      <span class="smart-popup-parent"></span>
-      <button class="smart-popup-close" title="Close">×</button>
-    </div>
-    <div class="smart-popup-mini"></div>
-    <div class="smart-popup-actions">
-      <button class="link-btn" data-role="cancel">Cancel</button>
-      <button class="primary" data-role="insert">Insert</button>
-    </div>
-  `;
-  popup.querySelector(".smart-popup-parent").textContent = parsed.parent;
-
-  const miniHost = popup.querySelector(".smart-popup-mini");
-  const insertBtn = popup.querySelector('[data-role="insert"]');
-
-  parsed.mini.forEach(m => {
-    const btn = document.createElement("button");
-    btn.className = "smart-mini";
-    btn.textContent = m;
-    btn.dataset.mini = m;
-    btn.addEventListener("click", e => {
-      e.stopPropagation();
-      if (selected.has(m)) { selected.delete(m); btn.classList.remove("selected"); }
-      else                 { selected.add(m);    btn.classList.add("selected"); }
-    });
-    miniHost.appendChild(btn);
-  });
-
-  const commit = () => {
-    // No sub-tags picked = insert just the parent, no parens.
-    // One or more picked = "parent (mini1, mini2, ...)"
-    const combined = selected.size === 0
-      ? parsed.parent
-      : `${parsed.parent} (${[...selected].join(", ")})`;
-    insertTag(commentId, combined);
-    // Flash the chip for feedback
-    chip.classList.add("flash");
-    setTimeout(() => chip.classList.remove("flash"), 500);
-    closeSmartPopup();
-  };
-  const cancel = () => closeSmartPopup();
-
-  insertBtn.addEventListener("click", e => { e.stopPropagation(); commit(); });
-  popup.querySelector('[data-role="cancel"]').addEventListener("click", e => { e.stopPropagation(); cancel(); });
-  popup.querySelector(".smart-popup-close").addEventListener("click", e => { e.stopPropagation(); cancel(); });
-
-  // Enter to insert (once at least one is picked), Escape to cancel
-  const keyHandler = e => {
-    if (e.key === "Enter") { e.preventDefault(); commit(); }
-    else if (e.key === "Escape") { e.preventDefault(); cancel(); }
-  };
-  popup._keyHandler = keyHandler;
-  document.addEventListener("keydown", keyHandler);
-
-  document.body.appendChild(popup);
-  _smartPopupEl = popup;
-
-  // Position after append so we can measure its size
-  const rect = chip.getBoundingClientRect();
-  const popRect = popup.getBoundingClientRect();
-  let top = rect.bottom + 6;
-  let left = rect.left;
-  if (top + popRect.height > window.innerHeight - 12) {
-    top = Math.max(12, rect.top - popRect.height - 6);
-  }
-  if (left + popRect.width > window.innerWidth - 12) {
-    left = Math.max(12, window.innerWidth - popRect.width - 12);
-  }
-  popup.style.top = `${top}px`;
-  popup.style.left = `${left}px`;
-}
-
-function closeSmartPopup(){
-  if (_smartPopupEl) {
-    if (_smartPopupEl._keyHandler) document.removeEventListener("keydown", _smartPopupEl._keyHandler);
-    _smartPopupEl.remove();
-    _smartPopupEl = null;
-  }
-}
-
-// Close smart popup on outside click
-document.addEventListener("click", e => {
-  if (!_smartPopupEl) return;
-  if (e.target.closest(".smart-popup") || e.target.closest(".tag-smart")) return;
-  closeSmartPopup();
-});
-
-// Delete with undo — routes through the toast so the user can restore.
-function deleteTagAtIndex(barEl, index){
-  const commentId = barEl.dataset.commentId;
-  const tagsArr = TAG_STATE[commentId] || [];
-  if (index < 0 || index >= tagsArr.length) return;
-  const [removed] = tagsArr.splice(index, 1);
-  saveTagsFor(commentId);
-  renderTagList(barEl);
-  showToast(`Deleted "${removed}"`, "Undo", () => {
-    const arr = TAG_STATE[commentId] || (TAG_STATE[commentId] = []);
-    const insertAt = Math.min(index, arr.length);
-    arr.splice(insertAt, 0, removed);
-    saveTagsFor(commentId);
-    renderTagList(barEl);
-  });
-}
-
-// Simple toast at bottom-right with an action button. Replaces any existing.
-let _toastTimer = null;
-function showToast(message, actionLabel, actionFn, duration = 5000){
-  document.querySelectorAll(".toast").forEach(t => t.remove());
-  if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
-
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  const msg = document.createElement("span");
-  msg.className = "toast-msg";
-  msg.textContent = message;
-  toast.appendChild(msg);
-  if (actionLabel) {
-    const btn = document.createElement("button");
-    btn.className = "toast-action";
-    btn.textContent = actionLabel;
-    btn.addEventListener("click", () => {
-      if (actionFn) actionFn();
-      toast.remove();
-      if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
-    });
-    toast.appendChild(btn);
-  }
-  document.body.appendChild(toast);
-
-  _toastTimer = setTimeout(() => { toast.remove(); _toastTimer = null; }, duration);
-}
-
-// ============================================================================
-// Export / Import: dump the customizable tag banks and checkbox-option lists
-// as a portable JSON file. Users can share their curated set between browsers
-// or with colleagues, and restore after clearing browser data.
-// ============================================================================
-function exportCustomizations(){
-  const data = {
-    version: 1,
-    app: "nicu-eval-onepage-workshop",
-    exported: new Date().toISOString(),
-    checkboxes: { ...CHECKBOX_STATE },
-    tags:       { ...TAG_STATE }
-  };
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const stamp = new Date().toISOString().split("T")[0];
-  a.href = url;
-  a.download = `nicu-eval-customizations-${stamp}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  const cbCount = Object.keys(data.checkboxes).length;
-  const tgCount = Object.keys(data.tags).length;
-  showToast(`Exported ${cbCount} checkbox groups + ${tgCount} tag banks`, null, null, 3500);
-}
-
-function importCustomizations(){
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "application/json,.json";
-  input.addEventListener("change", async e => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const parsed = JSON.parse(text);
-      const clean = validateImportedData(parsed);
-      if (!clean) { alert("That JSON file doesn't look like a valid customizations export."); return; }
-      applyImportedCustomizations(clean);
-    } catch (err) {
-      alert("Could not read that file — please check it's a valid JSON export.\n\n" + err.message);
-    }
-  });
-  input.click();
-}
-
-// Validate & sanitize imported data: keys must be strings and values must be
-// arrays of strings. Anything malformed is dropped rather than blindly copied.
-function validateImportedData(data){
-  if (!data || typeof data !== "object" || Array.isArray(data)) return null;
-  const clean = { checkboxes: {}, tags: {} };
-  const readMap = (source, target) => {
-    if (!source || typeof source !== "object") return;
-    for (const [k, v] of Object.entries(source)) {
-      if (typeof k !== "string") continue;
-      if (!Array.isArray(v)) continue;
-      const items = v.filter(x => typeof x === "string" && x.trim().length > 0);
-      if (items.length) target[k] = items.slice();
-    }
-  };
-  readMap(data.checkboxes, clean.checkboxes);
-  readMap(data.tags,       clean.tags);
-  if (!Object.keys(clean.checkboxes).length && !Object.keys(clean.tags).length) return null;
-  return clean;
-}
-
-function applyImportedCustomizations(clean){
-  const cbCount = Object.keys(clean.checkboxes).length;
-  const tgCount = Object.keys(clean.tags).length;
-  const proceed = confirm(
-    `Import ${cbCount} checkbox group(s) and ${tgCount} tag bank(s)?\n\n` +
-    `This will REPLACE your current customizations for the affected sections.\n` +
-    `(Sections not included in the file are left untouched.)`
-  );
-  if (!proceed) return;
-
-  // Snapshot the currently-checked checkboxes so we can restore selections
-  // that still make sense after re-render.
-  const checkedSnapshot = {};
-  document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-    if (!cb.name) return;
-    (checkedSnapshot[cb.name] = checkedSnapshot[cb.name] || new Set()).add(cb.value);
-  });
-
-  // Replace only the imported keys — other sections keep their current state.
-  Object.entries(clean.checkboxes).forEach(([k, v]) => {
-    CHECKBOX_STATE[k] = v.slice();
-    saveCheckboxesFor(k);
-  });
-  Object.entries(clean.tags).forEach(([k, v]) => {
-    TAG_STATE[k] = v.slice();
-    saveTagsFor(k);
-  });
-
-  // Re-render everything to reflect the new options
-  renderAll();
-
-  // Restore checkbox selections for values that still exist post-import
-  Object.entries(checkedSnapshot).forEach(([name, values]) => {
-    document.querySelectorAll(`input[type="checkbox"][name="${name}"]`).forEach(cb => {
-      if (values.has(cb.value)) cb.checked = true;
-    });
-  });
-
-  regen();
-  updateCompletionDots();
-  showToast(`Imported ${cbCount} checkbox group(s) + ${tgCount} tag bank(s)`, null, null, 4000);
-}
 function addTag(barEl){
   const commentId = barEl.dataset.commentId;
   const input = barEl.querySelector('[data-role="input"]');
+  if (!input) return;
   const value = input.value.trim();
   if (!value) return;
   const tags = TAG_STATE[commentId] || (TAG_STATE[commentId] = []);
-  if (tags.some(t => t.toLowerCase() === value.toLowerCase())) {
-    alert("That tag already exists in this section.");
-    input.select();
+  const lower = value.toLowerCase();
+  if (tags.some(t => t.toLowerCase() === lower)) {
+    input.value = "";
+    input.focus();
     return;
   }
   tags.push(value);
@@ -1358,275 +1061,233 @@ function addTag(barEl){
   renderTagList(barEl);
   input.value = "";
   input.focus();
+  scheduleRegen();
 }
-function resetTags(barEl){
+
+function deleteTagAtIndex(barEl, index){
   const commentId = barEl.dataset.commentId;
-  if (!confirm("Reset this section's tags to defaults? Custom tags here will be lost.")) return;
-  TAG_STATE[commentId] = [...defaultsFor(commentId)];
+  const tags = TAG_STATE[commentId] || [];
+  if (index < 0 || index >= tags.length) return;
+  const removed = tags.splice(index, 1)[0];
   saveTagsFor(commentId);
   renderTagList(barEl);
+  scheduleRegen();
+  showUndoToast(removed, commentId, index);
 }
-// Comment textareas where tag clicks insert AT THE CARET (respecting line
-// breaks and multi-paragraph flow). Everything else uses the original
-// append-at-end behavior — because those comments get sanitize()'d and
-// wrapped to 50 chars in the output, so mid-comment line breaks would
-// break the EMR paste format.
-const CURSOR_INSERT_COMMENTS = new Set(["impressions"]);
 
-function insertTag(commentId, text){
-  const ta = document.getElementById(commentId);
-  if (!ta) return;
-  if (CURSOR_INSERT_COMMENTS.has(commentId)) {
-    insertTagAtCaret(ta, text);
-  } else {
-    insertTagAtEnd(ta, text);
-  }
+function reorderTagAtIndex(barEl, fromIndex, toIndex){
+  const commentId = barEl.dataset.commentId;
+  const tags = TAG_STATE[commentId] || [];
+  if (fromIndex < 0 || fromIndex >= tags.length) return;
+  const [moved] = tags.splice(fromIndex, 1);
+  if (moved == null) return;
+  const clamped = Math.max(0, Math.min(toIndex, tags.length));
+  tags.splice(clamped, 0, moved);
+  saveTagsFor(commentId);
+  renderTagList(barEl);
   scheduleRegen();
 }
 
-// Original behavior: always append at the end of the textarea, with smart
-// separator handling. Keeps section comments as a single flowing sentence.
-function insertTagAtEnd(ta, text){
-  const current = ta.value.replace(/\s+$/, "");
-  if (!current) {
-    ta.value = text + ".";
-  } else {
-    const endsWithPunct = /[.!?]$/.test(current);
-    const sep = endsWithPunct ? " " : ". ";
-    ta.value = current + sep + text + ".";
-  }
-  ta.focus();
-  ta.setSelectionRange(ta.value.length, ta.value.length);
+function resetTags(barEl){
+  const commentId = barEl.dataset.commentId;
+  const defaults = defaultsFor(commentId);
+  TAG_STATE[commentId] = [...defaults];
+  saveTagsFor(commentId);
+  renderTagList(barEl);
+  scheduleRegen();
 }
 
-// Cursor-aware insertion: inserts at selectionStart / selectionEnd (or
-// replaces the current selection). Used for the Impressions textarea
-// where multi-paragraph clinical thought is expected.
-function insertTagAtCaret(ta, text){
-  // Prefer the caret position captured by the tag chip's mousedown handler
-  // BEFORE focus moved to the chip. Falls back to whatever the textarea's
-  // selection currently reports, or the end of the text.
-  let insertStart, insertEnd;
-  const captured = LAST_CURSOR[ta.id];
-  if (captured) {
-    insertStart = captured.start;
-    insertEnd   = captured.end;
-    delete LAST_CURSOR[ta.id];
-  } else {
-    const hasBeenFocused = ta.value.length === 0 || ta.selectionStart !== 0 || document.activeElement === ta;
-    insertStart = hasBeenFocused ? ta.selectionStart : ta.value.length;
-    insertEnd   = hasBeenFocused ? ta.selectionEnd   : ta.value.length;
-  }
-
-  const before = ta.value.substring(0, insertStart);
-  const after  = ta.value.substring(insertEnd);
-
-  const tagText = /[.!?]$/.test(text) ? text : text + ".";
-
-  // Leading separator based on what's immediately before the caret.
-  let lead = "";
-  if (before.length > 0) {
-    const last = before[before.length - 1];
-    if (last === "\n" || /\s/.test(last)) {
-      lead = "";
-    } else if (/[.!?]/.test(last)) {
-      lead = " ";
-    } else {
-      lead = ". ";
-    }
-  }
-
-  // Trailing separator based on what's immediately after the caret.
-  let trail = "";
-  if (after.length > 0 && !/^\s/.test(after)) {
-    trail = " ";
-  }
-
-  const insertion = lead + tagText + trail;
-  ta.value = before + insertion + after;
-
-  const newCaret = insertStart + lead.length + tagText.length;
-  ta.focus();
-  ta.setSelectionRange(newCaret, newCaret);
-}
-
-// ============================================================================
-// Output generation (NICU Eval 2.1 template)
-// ============================================================================
-function wrapText(text, max){
-  return text.split('\n').map(line => {
-    if (line.trim() === '') return '';
-    const words = line.split(' ');
-    let wrapped = '', cur = '';
-    words.forEach(w => {
-      if ((cur + w).length > max) { wrapped += cur.trim() + '\n'; cur = ''; }
-      cur += w + ' ';
-    });
-    return wrapped + cur.trim();
-  }).join('\n');
-}
-function sanitize(text, width = 50){
-  return wrapText(((text || '').trim() || 'n/a'), width);
-}
-function getVal(id){ return (document.getElementById(id)?.value || "").trim(); }
-function getCbList(name){
-  const vals = [];
-  document.querySelectorAll(`input[name="${name}"]:checked`).forEach(cb => vals.push(cb.value));
-  return vals;
-}
-
-function regen(){
-  const admittingDx = wrapText(getVal("admit_dx"), 65);
-  const slpDxOptions = getCbList("feed_diff_cb").join(", ");
-  const ga = getVal("ga");
-  const pma = getVal("pma");
-  const slpOrder = getCbList("slp_order_cb").join(", ");
-  const feedingOrder = getVal("feed_order");
-
-  const cbBlock = name => {
-    const vals = getCbList(name + "_cb");
-    return vals.length ? vals.join('\n') + '\n' : '';
-  };
-  const readiness               = cbBlock("readiness");
-  const oralMotor               = cbBlock("oralmotor");
-  const ssbOptions              = cbBlock("ssb");
-  const physiologicStability    = cbBlock("physio");
-  const feedingEngagement       = cbBlock("engagement");
-  const stateSensory            = cbBlock("stateSensory");
-  const postFeedPresentation    = cbBlock("postFeed");
-  const feedingChecklist        = cbBlock("recommendations");
-
-  const readinessComment            = sanitize(getVal("readinessComment"));
-  const oralMotorComment            = sanitize(getVal("oralMotorComment"));
-  const ssbComment                  = sanitize(getVal("ssbComment"));
-  const physiologicStabilityComment = sanitize(getVal("physiologicStabilityComment"));
-  const feedingEngagementComment    = sanitize(getVal("feedingEngagementComment"));
-  const feedingToleranceComment     = sanitize(getVal("feedingToleranceComment"));
-  const feedingStrategiesComment    = sanitize(getVal("feedingStrategiesComment"));
-  const stateSensoryComment         = sanitize(getVal("stateSensoryComment"));
-  const postFeedComment             = sanitize(getVal("postFeedComment"));
-  const recommendationsComment      = sanitize(getVal("recommendationsComment"));
-
-  const compoundingRisk     = wrapText(getVal("compoundingRisk"), 50);
-  const historyRelatedToSLP = wrapText(getVal("historyRelatedToSLP"), 70);
-  const impressions         = wrapText(getVal("impressions"), 70);
-
-  const bottle           = getVal("bottle");
-  const feedingPosition  = getVal("feedingPosition");
-  const lengthOfFeed     = getVal("lengthOfFeed");
-  const volumeConsumed   = getVal("volumeConsumed");
-  const strategiesUsed   = getVal("strategiesUsed");
-  const planOfCare       = getVal("planOfCare");
-
-  const output = `${admittingDx}\n\nFeeding difficulties secondary to ${slpDxOptions}\n${ga}\n${pma}\n${slpOrder}\n${feedingOrder}\n${readiness}\n${readinessComment}\n\n${oralMotor}\n${oralMotorComment}\n\n${ssbOptions}\n${ssbComment}\n\n${physiologicStability}\n${physiologicStabilityComment}\n\n${feedingEngagement}\n${feedingEngagementComment}\n\n${feedingToleranceComment}\n\n${feedingStrategiesComment}\n\n${stateSensory}\n${stateSensoryComment}\n\n${postFeedPresentation}\n${postFeedComment}\n\n${compoundingRisk}\n\n${historyRelatedToSLP}\n\n\n${impressions}\n\n\n${feedingChecklist}\n${recommendationsComment}\n\n${bottle}\n${feedingPosition}\n\n\n${lengthOfFeed}\n${volumeConsumed}\n${strategiesUsed}\n\n${planOfCare}`;
-
-  document.getElementById("output").textContent = output;
-}
-
-let regenTimer = null;
-function scheduleRegen(){
-  clearTimeout(regenTimer);
-  regenTimer = setTimeout(regen, 250);
-}
-
-function copyOutput(){
-  regen();
-  const txt = document.getElementById("output").textContent;
-  navigator.clipboard.writeText(txt).then(
-    () => { const b = event.target; const o = b.textContent; b.textContent = "✓ Copied"; setTimeout(() => b.textContent = o, 1500); },
-    () => alert("Could not copy. Select the text and copy manually.")
-  );
-}
-
-function scrollToOutput(){
-  document.getElementById("sec_output").scrollIntoView({behavior:"smooth", block:"start"});
-}
-
-// ============================================================================
-// Completion dots — TOC links show a filled dot once their section has data
-// ============================================================================
-function updateCompletionDots(){
-  SECTIONS.forEach(sec => {
-    const block = document.getElementById(`sec_${sec.id}`);
-    if (!block) return;
-    let hasContent = false;
-    block.querySelectorAll('input, textarea, select').forEach(el => {
-      if (el.dataset && el.dataset.role === 'input') return; // skip tag-input fields
-      if (el.type === 'checkbox') { if (el.checked) hasContent = true; }
-      else if (el.value && el.value.trim()) hasContent = true;
-    });
-    const link = document.querySelector(`.toc a[data-target="sec_${sec.id}"]`);
-    if (link) link.classList.toggle('completed', hasContent);
+function showUndoToast(removed, commentId, index){
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `<span class="toast-msg">Removed “${escapeHtml(removed)}”</span><button class="toast-action" type="button">Undo</button>`;
+  document.body.appendChild(toast);
+  const action = toast.querySelector(".toast-action");
+  action.addEventListener("click", () => {
+    const tags = TAG_STATE[commentId] || [];
+    tags.splice(index, 0, removed);
+    saveTagsFor(commentId);
+    renderTagList(document.querySelector(`.tag-section[data-comment-id="${commentId}"]`));
+    scheduleRegen();
+    toast.remove();
   });
+  setTimeout(() => toast.remove(), 4000);
 }
 
-// ============================================================================
-// Scroll-spy — highlights the TOC link for whichever section is in view
-// ============================================================================
-function setupScrollSpy(){
-  const tocEl = document.getElementById('toc');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
-        const link = document.querySelector(`.toc a[data-target="${id}"]`);
-        if (link) {
-          link.classList.add('active');
-          // Auto-scroll the TOC *horizontally* so the active chip stays visible.
-          // Important: must NOT use scrollIntoView here — it can affect the
-          // document's vertical scroll position and cause the page to bounce
-          // back up while the user is trying to scroll down.
-          const targetLeft = link.offsetLeft - tocEl.clientWidth / 2 + link.offsetWidth / 2;
-          tocEl.scrollTo({ left: targetLeft, behavior: 'smooth' });
-        }
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str);
+}
+
+function parseAliasTag(tag){
+  const match = /^(.+?)\s+(.+)$/.exec(tag.trim());
+  if (!match) return null;
+  const shortLabel = match[1].trim();
+  const longText = match[2].trim();
+  if (!shortLabel || !longText) return null;
+  return { display: shortLabel, value: longText };
+}
+
+function parseSmartTag(tag){
+  const match = /^(.+?)\s*:\s*(.+)$/.exec(tag.trim());
+  if (!match) return { isSmart: false };
+  const parent = match[1].trim();
+  const rest = match[2].trim();
+  if (!parent || !rest) return { isSmart: false };
+  const vals = rest.split(',').map(v => v.trim()).filter(Boolean);
+  return { isSmart: true, parent, values: vals };
+}
+
+function openSmartPopup(barEl, commentId, tag, parsed, index){
+  closeSmartPopup();
+  const popup = document.createElement("div");
+  popup.className = "smart-popup";
+  popup.innerHTML = `
+    <div class="smart-popup-header">
+      <div class="smart-popup-parent">${escapeHtml(parsed.parent)}</div>
+      <button class="smart-popup-close" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="smart-popup-mini"></div>
+    <div class="smart-popup-actions">
+      <button type="button" data-action="cancel">Cancel</button>
+      <button type="button" class="primary" data-action="insert">Insert</button>
+    </div>
+  `;
+
+  const miniContainer = popup.querySelector('.smart-popup-mini');
+  const vals = parsed.values.length ? parsed.values : [parsed.parent];
+  let selected = new Set(vals);
+
+  vals.forEach(value => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'smart-mini selected';
+    btn.textContent = value;
+    btn.addEventListener('click', () => {
+      if (selected.has(value)) {
+        selected.delete(value);
+        btn.classList.remove('selected');
+      } else {
+        selected.add(value);
+        btn.classList.add('selected');
       }
     });
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  document.querySelectorAll('.section-block, .output-section').forEach(s => observer.observe(s));
-}
-
-// ============================================================================
-// Clear form
-// ============================================================================
-function clearForm(){
-  if (!confirm("Clear all entered data? (Tags will not be touched.)")) return;
-  document.querySelectorAll("input, textarea, select").forEach(el => {
-    if (el.dataset.role === "input") return;  // skip tag-input fields
-    if (el.type === "checkbox") el.checked = false;
-    else el.value = "";
+    miniContainer.appendChild(btn);
   });
-  regen();
-  updateCompletionDots();
-  window.scrollTo({top:0, behavior:'smooth'});
+
+  popup.querySelector('.smart-popup-close').addEventListener('click', closeSmartPopup);
+  popup.querySelector('[data-action="cancel"]').addEventListener('click', closeSmartPopup);
+  popup.querySelector('[data-action="insert"]').addEventListener('click', () => {
+    const chosen = [...selected];
+    if (!chosen.length) return closeSmartPopup();
+    const inserted = chosen.join(', ');
+    insertTagAtComment(commentId, inserted);
+    closeSmartPopup();
+  });
+
+  const ta = document.getElementById(commentId);
+  const rect = ta ? ta.getBoundingClientRect() : { left: window.innerWidth / 2, top: 80 };
+  popup.style.left = `${Math.max(16, Math.min(window.innerWidth - 260, rect.left + 24))}px`;
+  popup.style.top = `${Math.max(16, rect.top + 24)}px`;
+  document.body.appendChild(popup);
 }
 
-// ============================================================================
-// Helpers
-// ============================================================================
-function escapeHtml(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function closeSmartPopup(){
+  document.querySelectorAll('.smart-popup').forEach(el => el.remove());
 }
-function escapeAttr(s){ return escapeHtml(s); }
 
-// ============================================================================
-// Init
-// ============================================================================
-renderAll();
-regen();
-setupScrollSpy();
-
-// Auto-regen on any input/change in the form
-document.addEventListener('input', e => {
-  if (e.target.dataset && e.target.dataset.role === 'input') return; // skip tag-input field
+function insertTagAtComment(commentId, text){
+  const ta = document.getElementById(commentId);
+  if (!ta) return;
+  const start = ta.selectionStart ?? ta.value.length;
+  const end = ta.selectionEnd ?? ta.value.length;
+  const before = ta.value.slice(0, start);
+  const after = ta.value.slice(end);
+  ta.value = before + text + after;
+  ta.focus();
+  const pos = start + text.length;
+  ta.setSelectionRange(pos, pos);
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
   scheduleRegen();
-  updateCompletionDots();
-});
-document.addEventListener('change', e => {
-  if (e.target.type === 'checkbox') { regen(); updateCompletionDots(); }
-});
+}
 
-updateCompletionDots();
+function scheduleRegen(){
+  if (window.__regenTimer) clearTimeout(window.__regenTimer);
+  window.__regenTimer = setTimeout(() => {
+    if (window.generateNote) window.generateNote();
+  }, 0);
+}
+
+function generateNote(){
+  const output = document.getElementById('output');
+  if (!output) return;
+
+  const lines = [];
+  const push = v => { if (v && String(v).trim()) lines.push(String(v).trim()); };
+
+  push(document.getElementById('admit_dx')?.value);
+  const ga = document.getElementById('ga')?.value;
+  const pma = document.getElementById('pma')?.value;
+  if (ga || pma) push(`GA ${ga || '—'} / PMA ${pma || '—'}`);
+  push(document.getElementById('feed_order')?.value);
+
+  const slpValues = [...document.querySelectorAll('input[name="slp_order_cb"]:checked')].map(cb => cb.value);
+  if (slpValues.length) push(`SLP order: ${slpValues.join(', ')}`);
+
+  const feedDiffs = [...document.querySelectorAll('input[name="feed_diff_cb"]:checked')].map(cb => cb.value);
+  if (feedDiffs.length) push(`Feeding difficulties secondary to: ${feedDiffs.join(', ')}`);
+
+  const gatherTextArea = id => {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  };
+
+  const sectionIds = [
+    'readinessComment','oralMotorComment','ssbComment','physiologicStabilityComment','feedingEngagementComment',
+    'feedingToleranceComment','feedingStrategiesComment','stateSensoryComment','postFeedComment',
+    'compoundingRisk','historyRelatedToSLP','impressions','recommendationsComment'
+  ];
+
+  sectionIds.forEach(id => {
+    const text = gatherTextArea(id);
+    if (text) push(text);
+  });
+
+  const bottle = document.getElementById('bottle')?.value;
+  const position = document.getElementById('feedingPosition')?.value;
+  const length = document.getElementById('lengthOfFeed')?.value;
+  const volume = document.getElementById('volumeConsumed')?.value;
+  const logistics = [bottle, position, length, volume].filter(Boolean);
+  if (logistics.length) push(`Logistics: ${logistics.join(' | ')}`);
+
+  const strategiesUsed = document.getElementById('strategiesUsed')?.value.trim();
+  if (strategiesUsed) push(`Strategies used: ${strategiesUsed}`);
+  const plan = document.getElementById('planOfCare')?.value.trim();
+  if (plan) push(`Plan of care: ${plan}`);
+
+  output.textContent = lines.length ? lines.join('\n\n') : 'Fill in the form — the note will appear here as you type.';
+}
+
+window.generateNote = generateNote;
+
+document.addEventListener('input', generateNote);
+document.addEventListener('change', generateNote);
+
+const LAST_CURSOR = {};
+let draggedTag = null;
+
+window.addEventListener('load', () => {
+  renderAll();
+  generateNote();
+});
 </script>
 </body>
 </html>
